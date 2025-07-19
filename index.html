@@ -19,12 +19,12 @@
         .container {
             max-width: 900px;
             margin: 0 auto;
-            padding: 1rem;
+            padding: 1rem; /* Padding responsif */
         }
         .section {
             background-color: #FFFFFF;
             border-radius: 1.5rem; /* More rounded corners */
-            padding: 2.5rem 2rem;
+            padding: 2.5rem 2rem; /* Padding responsif */
             margin-bottom: 2rem;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08); /* Softer shadow */
             text-align: center;
@@ -35,7 +35,7 @@
             background-size: cover;
             background-position: center;
             color: white;
-            padding: 6rem 1rem;
+            padding: 6rem 1rem; /* Padding responsif */
             border-radius: 1.5rem;
             margin-bottom: 2rem;
             display: flex;
@@ -128,23 +128,47 @@
         .music-button:hover {
             background-color: #8B4513;
         }
+
         /* Responsiveness for smaller screens */
         @media (max-width: 768px) {
-            .names {
-                font-size: 2.8rem;
-            }
-            .and-text {
-                font-size: 1.6rem;
-            }
-            .date-time {
-                font-size: 1.2rem;
-            }
-            .hero-section {
-                padding: 4rem 1rem;
-                min-height: 300px;
+            .container {
+                padding: 0.75rem; /* Padding lebih kecil di mobile */
             }
             .section {
-                padding: 2rem 1.5rem;
+                padding: 1.5rem 1rem; /* Padding lebih kecil di mobile */
+                margin-bottom: 1.5rem;
+            }
+            .hero-section {
+                padding: 3rem 0.5rem; /* Padding lebih kecil di mobile */
+                min-height: 280px;
+            }
+            .names {
+                font-size: 2.5rem; /* Ukuran font lebih kecil */
+            }
+            .and-text {
+                font-size: 1.4rem; /* Ukuran font lebih kecil */
+            }
+            .date-time {
+                font-size: 1.1rem; /* Ukuran font lebih kecil */
+            }
+            .text-lg { /* Mengatur ulang ukuran teks umum */
+                font-size: 1rem;
+            }
+            .text-xl {
+                font-size: 1.125rem;
+            }
+            .text-2xl {
+                font-size: 1.5rem;
+            }
+            .text-3xl {
+                font-size: 1.875rem;
+            }
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Ukuran grid lebih kecil */
+                gap: 1rem;
+            }
+            .gallery-item img {
+                height: 180px; /* Tinggi gambar galeri lebih kecil */
             }
             .music-controls {
                 bottom: 1rem;
@@ -158,16 +182,31 @@
         }
         @media (max-width: 480px) {
             .names {
-                font-size: 2.2rem;
+                font-size: 2rem;
             }
             .and-text {
-                font-size: 1.4rem;
+                font-size: 1.2rem;
             }
             .date-time {
-                font-size: 1rem;
+                font-size: 0.9rem;
+            }
+            .hero-section {
+                padding: 2.5rem 0.5rem;
+                min-height: 250px;
             }
             .section {
-                padding: 1.5rem 1rem;
+                padding: 1rem 0.75rem;
+                margin-bottom: 1rem;
+            }
+            .button {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.9rem;
+            }
+            .gallery-grid {
+                grid-template-columns: 1fr; /* Satu kolom di layar sangat kecil */
+            }
+            .gallery-item img {
+                height: 200px; /* Kembali ke tinggi yang masuk akal untuk satu kolom */
             }
         }
     </style>
@@ -297,8 +336,8 @@
 
     <!-- Audio untuk Background Music -->
     <audio id="backgroundMusic" loop>
-        <!-- Ganti 'URL_MUSIK_ANDA.mp3' dengan tautan langsung ke file musik Anda -->
-        <source src="URL_MUSIK_ANDA.mp3" type="audio/mpeg">
+        <!-- Tautan langsung ke file musik Anda dari Google Drive -->
+        <source src="https://drive.google.com/uc?export=download&id=1z728mr0W3XR3OGEgQ6vGde-VyojmezJY" type="audio/mpeg">
         Browser Anda tidak mendukung elemen audio.
     </audio>
 
@@ -372,3 +411,4 @@
 </body>
 </html>
 
+                
