@@ -15,6 +15,7 @@
             color: #4A4A4A; /* Dark gray for text */
             line-height: 1.6;
             scroll-behavior: smooth;
+            overflow-x: hidden; /* Prevent horizontal scroll */
         }
         .container {
             max-width: 900px;
@@ -30,8 +31,8 @@
             text-align: center;
         }
         .hero-section {
-            /* Background image from user upload */
-            background-image: url('http://googleusercontent.com/file_content/1000110407.jpg-b5c2afcc-c25b-4cfd-b0fa-ed4ead175d46');
+            /* Background image from user's new Google Drive link */
+            background-image: url('https://drive.google.com/uc?export=download&id=1zQP6ofTmE2xwCuI0c-OIw8CUXyo9Dzgq');
             background-size: cover;
             background-position: center;
             color: white;
@@ -111,6 +112,7 @@
             bottom: 1.5rem;
             right: 1.5rem;
             z-index: 1000;
+            transition: opacity 0.5s ease; /* For fading in/out */
         }
         .music-button {
             background-color: #A0522D;
@@ -128,7 +130,47 @@
         .music-button:hover {
             background-color: #8B4513;
         }
-        /* Responsiveness for smaller screens */
+
+        /* Pre-opening screen styles */
+        .pre-opening-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Background image from user's new Google Drive link */
+            background-image: url('https://drive.google.com/uc?export=download&id=1zQP6ofTmE2xwCuI0c-OIw8CUXyo9Dzgq');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
+            z-index: 2000; /* On top of everything */
+            transition: opacity 1s ease-out, visibility 1s ease-out;
+            opacity: 1;
+            visibility: visible;
+        }
+        .pre-opening-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .pre-opening-screen .names {
+            font-size: 4rem; /* Larger names for opening */
+            margin-bottom: 1rem;
+        }
+        .pre-opening-screen .and-text {
+            font-size: 2.5rem;
+        }
+        .pre-opening-screen .button {
+            margin-top: 2rem;
+            font-size: 1.2rem;
+            padding: 1rem 2.5rem;
+        }
+
+        /* Responsive adjustments */
         @media (max-width: 768px) {
             .container {
                 padding: 0.75rem; /* Smaller padding on mobile */
@@ -178,6 +220,16 @@
                 height: 45px;
                 padding: 0.6rem;
             }
+            .pre-opening-screen .names {
+                font-size: 3rem;
+            }
+            .pre-opening-screen .and-text {
+                font-size: 2rem;
+            }
+            .pre-opening-screen .button {
+                font-size: 1.1rem;
+                padding: 0.8rem 2rem;
+            }
         }
         @media (max-width: 480px) {
             .names {
@@ -207,169 +259,190 @@
             .gallery-item img {
                 height: 200px; /* Reasonable height for single column */
             }
+            .pre-opening-screen .names {
+                font-size: 2.5rem;
+            }
+            .pre-opening-screen .and-text {
+                font-size: 1.5rem;
+            }
+            .pre-opening-screen .button {
+                font-size: 1rem;
+                padding: 0.7rem 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Hero Section -->
-        <div class="hero-section rounded-xl">
-            <p class="text-xl md:text-2xl font-light mb-2 heading-font">The Wedding Of</p>
-            <h1 class="names text-white">
-                <span class="block">Sonia Agustina Oemar, S. Farm</span>
-                <span class="and-text text-white">&</span>
-                <span class="block">Suriansyah, S. Kep., Ners</span>
-            </h1>
-            <p class="text-xl md:text-2xl font-semibold text-white mt-4 heading-font">
-                Rabu, 24 September 2025
-            </p>
-        </div>
+    <!-- Pre-opening Screen -->
+    <div id="preOpeningScreen" class="pre-opening-screen">
+        <p class="text-2xl md:text-3xl font-light mb-4 heading-font">The Wedding Of</p>
+        <h1 class="names">
+            <span class="block">Sonia Agustina Oemar, S. Farm</span>
+            <span class="and-text">&</span>
+            <span class="block">Suriansyah, S. Kep., Ners</span>
+        </h1>
+        <p class="text-xl md:text-2xl font-semibold mt-4 heading-font">
+            Rabu, 24 September 2025
+        </p>
+        <button id="openInvitationButton" class="button">Buka Undangan</button>
 
-        <!-- To Guest Section -->
-        <div class="section">
-            <p class="text-lg md:text-xl text-gray-700 mb-4 heading-font">Kepada Yth.</p>
-            <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2 heading-font">
-                <span id="guestNamePlaceholder">Bapak/Ibu/Saudara/i</span>
-            </h2>
-            <p class="text-md text-gray-600">Tanpa mengurangi rasa hormat, kami mengundang Anda untuk hadir di acara pernikahan kami.</p>
+        <!-- Music Button on Pre-opening Screen -->
+        <div class="music-controls absolute bottom-4 right-4">
+            <button id="musicToggleButtonPre" class="music-button">
+                <svg id="playIconPre" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                    <path fill-rule="evenodd" d="M4.5 5.653c0-1.427 1.529-2.307 2.796-1.664l11.54 6.347c1.268.697 1.268 2.637 0 3.334l-11.54 6.347C6.029 20.307 4.5 19.427 4.5 18.0V5.653Z" clip-rule="evenodd" />
+                </svg>
+                <svg id="pauseIconPre" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 hidden">
+                    <path fill-rule="evenodd" d="M6.75 5.25a.75.75 0 0 1 .75-.75H9a.75.75 0 0 1 .75.75v13.5a.75.75 0 0 1-.75.75H7.5a.75.75 0 0 1-.75-.75V5.25ZM14.25 5.25a.75.75 0 0 1 .75-.75h1.5a.75.75 0 0 1 .75.75v13.5a.75.75 0 0 1-.75.75h-1.5a.75.75 0 0 1-.75-.75V5.25Z" clip-rule="evenodd" />
+                </svg>
+            </button>
         </div>
+    </div>
 
-        <!-- Opening Verse/Quote Section -->
-        <div class="section">
-            <h2 class="text-2xl md:text-3xl font-bold mb-4 text-gray-800 heading-font">Bismillahirrahmanirrahim</h2>
-            <p class="text-lg text-gray-600 italic">
-                "Maha Suci Allah yang telah menciptakan semuanya berpasang-pasangan, baik dari apa yang ditumbuhkan oleh bumi dan dari diri mereka sendiri maupun dari apa yang tidak mereka ketahui."
-            </p>
-            <p class="text-md text-gray-500 mt-2">— QS. Yasin : 36</p>
-        </div>
+    <!-- Main Invitation Content -->
+    <div id="mainContent" class="hidden">
+        <div class="container">
+            <!-- Hero Section -->
+            <div class="hero-section rounded-xl">
+                <p class="text-xl md:text-2xl font-light mb-2 heading-font">The Wedding Of</p>
+                <h1 class="names text-white">
+                    <span class="block">Sonia Agustina Oemar, S. Farm</span>
+                    <span class="and-text text-white">&</span>
+                    <span class="block">Suriansyah, S. Kep., Ners</span>
+                </h1>
+                <p class="text-xl md:text-2xl font-semibold text-white mt-4 heading-font">
+                    Rabu, 24 September 2025
+                </p>
+            </div>
 
-        <!-- Event Details Section - Akad Nikah -->
-        <div class="section">
-            <h2 class="text-3xl font-bold mb-4 text-gray-800 heading-font">Akad Nikah</h2>
-            <p class="date-time text-2xl font-semibold mb-2">Rabu, 24 September 2025</p>
-            <p class="text-xl text-gray-700 mb-4">Pukul 08:00 WITA</p>
-            <p class="text-lg text-gray-600">
-                <strong>Lokasi:</strong> [Nama Lokasi Akad Nikah Anda]<br>
-                [Alamat Lengkap Lokasi Akad Nikah Anda]
-            </p>
-            <a href="https://maps.app.goo.gl/Z5dU8usUaRLz9Xhv8" target="_blank" class="button mt-6">Lihat di Google Maps</a>
-        </div>
+            <!-- To Guest Section -->
+            <div class="section">
+                <p class="text-lg md:text-xl text-gray-700 mb-4 heading-font">Kepada Yth.</p>
+                <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2 heading-font">
+                    <span id="guestNamePlaceholder">Bapak/Ibu/Saudara/i</span>
+                </h2>
+                <p class="text-md text-gray-600">Tanpa mengurangi rasa hormat, kami mengundang Anda untuk hadir di acara pernikahan kami.</p>
+            </div>
 
-        <!-- Event Details Section - Resepsi -->
-        <div class="section">
-            <h2 class="text-3xl font-bold mb-4 text-gray-800 heading-font">Resepsi</h2>
-            <p class="date-time text-2xl font-semibold mb-2">Rabu, 24 September 2025</p>
-            <p class="text-xl text-gray-700 mb-4">Pukul 10:00 WITA - Selesai</p>
-            <p class="text-lg text-gray-600">
-                <strong>Lokasi:</strong> [Nama Lokasi Resepsi Anda]<br>
-                [Alamat Lengkap Lokasi Resepsi Anda]
-            </p>
-            <a href="https://maps.app.goo.gl/Z5dU8usUaRLz9Xhv8" target="_blank" class="button mt-6">Lihat di Google Maps</a>
-        </div>
+            <!-- Opening Verse/Quote Section -->
+            <div class="section">
+                <h2 class="text-2xl md:text-3xl font-bold mb-4 text-gray-800 heading-font">Bismillahirrahmanirrahim</h2>
+                <p class="text-lg text-gray-600 italic">
+                    "Maha Suci Allah yang telah menciptakan semuanya berpasang-pasangan, baik dari apa yang ditumbuhkan oleh bumi dan dari diri mereka sendiri maupun dari apa yang tidak mereka ketahui."
+                </p>
+                <p class="text-md text-gray-500 mt-2">— QS. Yasin : 36</p>
+            </div>
 
-        <!-- Gallery Section -->
-        <div class="section">
-            <h2 class="text-3xl font-bold mb-4 text-gray-800 heading-font">Galeri Momen</h2>
-            <div class="gallery-grid">
-                <div class="gallery-item">
-                    <img src="https://placehold.co/400x300/E0BBE4/957DAD?text=Foto+1" alt="Foto Pernikahan 1" onerror="this.onerror=null;this.src='https://placehold.co/400x300/E0BBE4/957DAD?text=Foto+1';">
-                </div>
-                <div class="gallery-item">
-                    <img src="https://placehold.co/400x300/957DAD/E0BBE4?text=Foto+2" alt="Foto Pernikahan 2" onerror="this.onerror=null;this.src='https://placehold.co/400x300/957DAD/E0BBE4?text=Foto+2';">
-                </div>
-                <div class="gallery-item">
-                    <img src="https://placehold.co/400x300/D291BC/6A0572?text=Foto+3" alt="Foto Pernikahan 3" onerror="this.onerror=null;this.src='https://placehold.co/400x300/D291BC/6A0572?text=Foto+3';">
-                </div>
-                <div class="gallery-item">
-                    <img src="https://placehold.co/400x300/FFC72C/000000?text=Foto+4" alt="Foto Pernikahan 4" onerror="this.onerror=null;this.src='https://placehold.co/400x300/FFC72C/000000?text=Foto+4';">
+            <!-- Event Details Section - Akad Nikah -->
+            <div class="section">
+                <h2 class="text-3xl font-bold mb-4 text-gray-800 heading-font">Akad Nikah</h2>
+                <p class="date-time text-2xl font-semibold mb-2">Rabu, 24 September 2025</p>
+                <p class="text-xl text-gray-700 mb-4">Pukul 08:00 WITA</p>
+                <p class="text-lg text-gray-600">
+                    <strong>Lokasi:</strong> Rumah Mempelai<br>
+                    Samping Masjid Jabal Rahmah Mandin, Pulau Laut Utara, Kab. Kotabaru, Kalimantan Selatan 72114
+                </p>
+                <a href="https://maps.app.goo.gl/Z5dU8usUaRLz9Xhv8" target="_blank" class="button mt-6">Lihat di Google Maps</a>
+            </div>
+
+            <!-- Event Details Section - Resepsi -->
+            <div class="section">
+                <h2 class="text-3xl font-bold mb-4 text-gray-800 heading-font">Resepsi</h2>
+                <p class="date-time text-2xl font-semibold mb-2">Rabu, 24 September 2025</p>
+                <p class="text-xl text-gray-700 mb-4">Pukul 10:00 WITA - Selesai</p>
+                <p class="text-lg text-gray-600">
+                    <strong>Lokasi:</strong> Rumah Mempelai<br>
+                    Samping Masjid Jabal Rahmah Mandin, Pulau Laut Utara, Kab. Kotabaru, Kalimantan Selatan 72114
+                </p>
+                <a href="https://maps.app.goo.gl/Z5dU8usUaRLz9Xhv8" target="_blank" class="button mt-6">Lihat di Google Maps</a>
+            </div>
+
+            <!-- Gallery Section -->
+            <div class="section">
+                <h2 class="text-3xl font-bold mb-4 text-gray-800 heading-font">Galeri Momen</h2>
+                <div class="gallery-grid">
+                    <div class="gallery-item">
+                        <img src="https://drive.google.com/uc?export=download&id=1zQaDUcNVM35a9Km5QRO2siOAC-pLXdy2" alt="Foto Pernikahan 1" onerror="this.onerror=null;this.src='https://placehold.co/400x300/E0BBE4/957DAD?text=Foto+1';">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="http://googleusercontent.com/file_content/uploaded:1000110423.webp-ab8a6643-52b8-4a15-a4df-77ed94b40ff8" alt="Foto Pernikahan 2" onerror="this.onerror=null;this.src='https://placehold.co/400x300/957DAD/E0BBE4?text=Foto+2';">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://placehold.co/400x300/D291BC/6A0572?text=Foto+3" alt="Foto Pernikahan 3" onerror="this.onerror=null;this.src='https://placehold.co/400x300/D291BC/6A0572?text=Foto+3';">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://placehold.co/400x300/FFC72C/000000?text=Foto+4" alt="Foto Pernikahan 4" onerror="this.onerror=null;this.src='https://placehold.co/400x300/FFC72C/000000?text=Foto+4';">
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Gift Information Section (Optional) -->
-        <div class="section">
-            <h2 class="text-3xl font-bold mb-4 text-gray-800 heading-font">Hadiah & Doa Restu</h2>
-            <p class="text-lg text-gray-600 mb-4">
-                Kehadiran dan doa restu Anda adalah hadiah terindah bagi kami. Namun, jika Anda ingin memberikan tanda kasih, Anda dapat menyalurkannya melalui:
-            </p>
-            <div class="grid grid-cols-1 gap-4 text-left">
-                <div class="p-4 bg-gray-50 rounded-lg">
-                    <p class="font-semibold text-gray-700">Bank Mandiri</p>
-                    <p class="text-sm text-gray-600">No. Rekening: 310021268571</p>
-                    <p class="text-sm text-gray-600">Atas Nama: Sonia Agustina Oemar</p>
+            <!-- Gift Information Section (Optional) -->
+            <div class="section">
+                <h2 class="text-3xl font-bold mb-4 text-gray-800 heading-font">Hadiah & Doa Restu</h2>
+                <p class="text-lg text-gray-600 mb-4">
+                    Kehadiran dan doa restu Anda adalah hadiah terindah bagi kami. Namun, jika Anda ingin memberikan tanda kasih, Anda dapat menyalurkannya melalui:
+                </p>
+                <div class="grid grid-cols-1 gap-4 text-left">
+                    <div class="p-4 bg-gray-50 rounded-lg">
+                        <p class="font-semibold text-gray-700">Bank Mandiri</p>
+                        <p class="text-sm text-gray-600">No. Rekening: 310021268571</p>
+                        <p class="text-sm text-gray-600">Atas Nama: Sonia Agustina Oemar</p>
+                    </div>
                 </div>
             </div>
-            <p class="text-sm text-gray-500 mt-4">
-                Atau melalui amplop digital/e-wallet: [Link E-wallet/QR Code]
-            </p>
-        </div>
 
-        <!-- Comment/Ucapan Selamat Section -->
-        <div class="section">
-            <h2 class="text-3xl font-bold mb-4 text-gray-800 heading-font">Kirim Ucapan & Doa</h2>
-            <p class="text-lg text-gray-600 mb-4">
-                Silakan tinggalkan pesan, doa, atau ucapan selamat Anda untuk kami.
-            </p>
-            <textarea id="commentMessage" class="w-full p-3 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-orange-300" rows="5" placeholder="Tulis ucapan Anda di sini..."></textarea>
-            <button id="sendCommentButton" class="button">Kirim Ucapan via WhatsApp</button>
-            <p class="text-sm text-gray-500 mt-2">
-                *Pesan akan dikirimkan langsung ke WhatsApp mempelai.
-            </p>
-        </div>
+            <!-- Comment/Ucapan Selamat Section -->
+            <div class="section">
+                <h2 class="text-3xl font-bold mb-4 text-gray-800 heading-font">Kirim Ucapan & Doa</h2>
+                <p class="text-lg text-gray-600 mb-4">
+                    Silakan tinggalkan pesan, doa, atau ucapan selamat Anda untuk kami.
+                </p>
+                <textarea id="commentMessage" class="w-full p-3 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-orange-300" rows="5" placeholder="Tulis ucapan Anda di sini..."></textarea>
+                <button id="sendCommentButton" class="button">Kirim Ucapan via WhatsApp</button>
+                <p class="text-sm text-gray-500 mt-2">
+                    *Pesan akan dikirimkan langsung ke WhatsApp mempelai.
+                </p>
+            </div>
 
-        <!-- Closing Section -->
-        <div class="section">
-            <h2 class="text-3xl font-bold mb-4 text-gray-800 heading-font">Terima Kasih</h2>
-            <p class="text-lg text-gray-600">
-                Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa restu.
-            </p>
-            <p class="text-lg text-gray-600 mt-4">
-                Atas kehadiran dan doa restunya, kami mengucapkan terima kasih.
-            </p>
-            <div class="divider"></div>
-            <p class="names text-3xl mt-6">
-                Sonia Agustina Oemar & Suriansyah
-            </p>
-            <p class="text-md text-gray-500 mt-2">
-                Keluarga Besar
-            </p>
-        </div>
+            <!-- Closing Section -->
+            <div class="section">
+                <h2 class="text-3xl font-bold mb-4 text-gray-800 heading-font">Terima Kasih</h2>
+                <p class="text-lg text-gray-600">
+                    Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa restu.
+                </p>
+                <p class="text-lg text-gray-600 mt-4">
+                    Atas kehadiran dan doa restunya, kami mengucapkan terima kasih.
+                </p>
+                <div class="divider"></div>
+                <p class="names text-3xl mt-6">
+                    Sonia Agustina Oemar & Suriansyah
+                </p>
+                <p class="text-md text-gray-500 mt-2">
+                    Keluarga Besar
+                </p>
+            </div>
 
-        <!-- Footer -->
-        <footer class="text-center text-gray-500 text-sm py-4">
-            &copy; 2024 Undangan Pernikahan. Dibuat dengan Cinta.
-        </footer>
+            <!-- Footer -->
+            <footer class="text-center text-gray-500 text-sm py-4">
+                &copy; 2025 Undangan Pernikahan. Dibuat dengan Cinta.
+            </footer>
+        </div>
     </div>
 
     <!-- Audio for Background Music -->
     <audio id="backgroundMusic" loop>
-        <!-- Direct link to your music file from Google Drive.
+        <!-- Direct link to your music file.
              If this doesn't work, consider hosting the MP3 directly on GitHub
              and using its raw link. -->
         <source src="https://github.com/suriansyahdmw28-ops/Undangan/raw/refs/heads/main/bigbangstill.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
 
-    <!-- Play/Pause Music Button -->
-    <div class="music-controls">
-        <button id="musicToggleButton" class="music-button">
-            <!-- SVG Icon for Play -->
-            <svg id="playIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-                <path fill-rule="evenodd" d="M4.5 5.653c0-1.427 1.529-2.307 2.796-1.664l11.54 6.347c1.268.697 1.268 2.637 0 3.334l-11.54 6.347C6.029 20.307 4.5 19.427 4.5 18.0V5.653Z" clip-rule="evenodd" />
-            </svg>
-            <svg id="pauseIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 hidden">
-                <path fill-rule="evenodd" d="M6.75 5.25a.75.75 0 0 1 .75-.75H9a.75.75 0 0 1 .75.75v13.5a.75.75 0 0 1-.75.75H7.5a.75.75 0 0 1-.75-.75V5.25ZM14.25 5.25a.75.75 0 0 1 .75-.75h1.5a.75.75 0 0 1 .75.75v13.5a.75.75 0 0 1-.75.75h-1.5a.75.75 0 0 1-.75-.75V5.25Z" clip-rule="evenodd" />
-            </svg>
-        </button>
-    </div>
-
     <script>
-        // JavaScript to get guest name from URL
         document.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
             let guestName = urlParams.get('to');
 
-            // Replace '+' with space if present in the URL parameter
             if (guestName) {
                 guestName = decodeURIComponent(guestName.replace(/\+/g, ' '));
                 document.getElementById('guestNamePlaceholder').textContent = guestName;
@@ -377,50 +450,49 @@
                 document.getElementById('guestNamePlaceholder').textContent = 'Bapak/Ibu/Saudara/i';
             }
 
-            // JavaScript for music control
+            const preOpeningScreen = document.getElementById('preOpeningScreen');
+            const mainContent = document.getElementById('mainContent');
+            const openInvitationButton = document.getElementById('openInvitationButton');
             const backgroundMusic = document.getElementById('backgroundMusic');
-            const musicToggleButton = document.getElementById('musicToggleButton');
-            const playIcon = document.getElementById('playIcon');
-            const pauseIcon = document.getElementById('pauseIcon');
+            const musicToggleButtonPre = document.getElementById('musicToggleButtonPre');
+            const playIconPre = document.getElementById('playIconPre');
+            const pauseIconPre = document.getElementById('pauseIconPre');
 
-            // Try to autoplay music when the page loads
-            // Note: Many modern browsers block autoplay without user interaction.
-            // The play/pause button is provided as a fallback.
-            backgroundMusic.play().catch(error => {
-                console.log('Autoplay blocked:', error);
-                // If autoplay is blocked, ensure the play icon is visible
-                playIcon.classList.remove('hidden');
-                pauseIcon.classList.add('hidden');
-            });
+            // Initial stscreen
+            playIconPre.classList.remove('hidden');
+            pauseIconPre.classList.add('hidden');
 
-            musicToggleButton.addEventListener('click', function() {
+            // Handle music toggle on pre-opening screen
+            musicToggleButtonPre.addEventListener('click', function(event) {
+                event.stopPropagation(); // Prevent click from bubbling to openInvitationButton
                 if (backgroundMusic.paused) {
                     backgroundMusic.play();
-                    playIcon.classList.add('hidden');
-                    pauseIcon.classList.remove('hidden');
+                    playIconPre.classList.add('hidden');
+                    pauseIconPre.classList.remove('hidden');
                 } else {
                     backgroundMusic.pause();
-                    playIcon.classList.remove('hidden');
-                    pauseIcon.classList.add('hidden');
+                    playIconPre.classList.remove('hidden');
+                    pauseIconPre.classList.add('hidden');
                 }
             });
 
-            // Update icon based on current music status
-            backgroundMusic.addEventListener('play', () => {
-                playIcon.classList.add('hidden');
-                pauseIcon.classList.remove('hidden');
-            });
+            // Open invitation and start music on button click
+            openInvitationButton.addEventListener('click', function() {
+                preOpeningScreen.classList.add('hidden'); // Hide pre-opening screen
+                mainContent.classList.remove('hidden'); // Show main content
+                backgroundMusic.play().catch(error => {
+                    console.log('Music play failed after click:', error);
+                });
 
-            backgroundMusic.addEventListener('pause', () => {
-                playIcon.classList.remove('hidden');
-                pauseIcon.classList.add('hidden');
+                // Scroll to top of the main content after opening
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             });
 
             // JavaScript for Comment Section (Send via WhatsApp)
             const sendCommentButton = document.getElementById('sendCommentButton');
             const commentMessage = document.getElementById('commentMessage');
-            const brideName = "Sonia Agustina Oemar"; // Replace with actual WhatsApp contact name/number if different
-            const groomName = "Suriansyah"; // Replace with actual WhatsApp contact name/number if different
+            const brideName = "Sonia Agustina Oemar";
+            const groomName = "Suriansyah";
             const whatsappNumber = "6281234567890"; // Ganti dengan nomor WhatsApp mempelai (tanpa +)
 
             sendCommentButton.addEventListener('click', function() {
@@ -437,5 +509,3 @@
     </script>
 </body>
 </html>
-
-    
