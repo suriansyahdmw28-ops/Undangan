@@ -453,6 +453,7 @@
         Your browser does not support the audio element.
     </audio>
 
+    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -460,4 +461,67 @@
 
             if (guestName) {
                 guestName = decodeURIComponent(guestName.replace(/\+/g, ' '));
-    
+                document.getElementById('guestNamePlaceholder').textContent = guestName;
+            } else {
+                document.getElementById('guestNamePlaceholder').textContent = 'Bapak/Ibu/Saudara/i';
+            }
+
+            const preOpeningScreen = document.getElementById('preOpeningScreen');
+            const mainContent = document.getElementById('mainContent');
+            const openInvitationButton = document.getElementById('openInvitationButton');
+            const backgroundMusic = document.getElementById('backgroundMusic');
+            const musicToggleButtonPre = document.getElementById('musicToggleButtonPre');
+            const playIconPre = document.getElementById('playIconPre');
+            const pauseIconPre = document.getElementById('pauseIconPre');
+
+            // Initial state for music button on pre-opening screen
+            playIconPre.classList.remove('hidden');
+            pauseIconPre.classList.add('hidden');
+
+            // Handle music toggle on pre-opening screen
+            musicToggleButtonPre.addEventListener('click', function(event) {
+                event.stopPropagation(); // Prevent click from bubbling to openInvitationButton
+                if (backgroundMusic.paused) {
+                    backgroundMusic.play();
+                    playIconPre.classList.add('hidden');
+                    pauseIconPre.classList.remove('hidden');
+                } else {
+                    backgroundMusic.pause();
+                    playIconPre.classList.remove('hidden');
+                    pauseIconPre.classList.add('hidden');
+                }
+            });
+
+            // Open invitation and start music on button click
+            openInvitationButton.addEventListener('click', function() {
+                preOpeningScreen.classList.add('hidden'); // Hide pre-opening screen
+                mainContent.classList.remove('hidden'); // Show main content
+                backgroundMusic.play().catch(error => {
+                    console.log('Music play failed after click:', error);
+                });
+
+                // Scroll to top of the main content after opening
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+            // JavaScript for Comment Section (Send via WhatsApp)
+            const sendCommentButton = document.getElementById('sendCommentButton');
+            const commentMessage = document.getElementById('commentMessage');
+            const brideName = "Sonia Agustina Oemar";
+            const groomName = "Suriansyah";
+            const whatsappNumber = "6281234567890"; // Ganti dengan nomor WhatsApp mempelai (tanpa +)
+
+            sendCommentButton.addEventListener('click', function() {
+                const message = commentMessage.value.trim();
+                if (message) {
+                    const fullMessage = `Ucapan dari ${document.getElementById('guestNamePlaceholder').textContent}:\n\n"${message}"\n\nSelamat atas pernikahan ${brideName} & ${groomName}!`;
+                    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(fullMessage)}`;
+                    window.open(whatsappUrl, '_blank');
+                } else {
+                    alert('Mohon tulis ucapan Anda terlebih dahulu.'); // Using alert for simplicity, consider custom modal for better UX
+                }
+            });
+        });
+    </script>
+</body>
+</html>
