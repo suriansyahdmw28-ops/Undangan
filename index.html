@@ -13,7 +13,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         // Global variables provided by Canvas environment
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
@@ -28,17 +28,18 @@
         // Initialize Firebase and authenticate
         async function initializeFirebaseAndAuth() {
             try {
-                if (Object.keys(firebaseConfig).length === 0) {
-                    console.warn("Firebase config not found. Please provide __firebase_config.");
-                    // Fallback for local testing without Canvas environment
-                    // Replace with your actual Firebase config if testing locally
+                if (Object.keys(firebaseConfig).length === 0 || !firebaseConfig.projectId) {
+                    console.warn("Firebase config not found or incomplete. Please provide __firebase_config.");
+                    // Fallback for local testing without Canvas environment 
+                    // YOU MUST REPLACE THESE WITH YOUR ACTUAL FIREBASE CONFIG
+                    // Get this from Firebase Console -> Project settings -> Your apps -> Web app -> Config
                     app = initializeApp({
-                        apiKey: "YOUR_API_KEY",
-                        authDomain: "YOUR_AUTH_DOMAIN",
-                        projectId: "YOUR_PROJECT_ID",
-                        storageBucket: "YOUR_STORAGE_BUCKET",
-                        messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-                        appId: "YOUR_APP_ID"
+                        apiKey: "AIzaSyBck1L_R9RrXocDKo58RvwSbm7IPQQkbOk", // Ganti ini
+                        authDomain: "undangan-sonia-suriansyah.firebaseapp.com", // Ganti ini
+                        projectId: "undangan-sonia-suriansyah", // Ganti ini
+                        storageBucket: "undangan-sonia-suriansyah.firebasestorage.app", // Ganti ini
+                        messagingSenderId: "405367450209", // Ganti ini
+                        appId: "1:405367450209:web:0c2c8632dcdfd5e387d820" // Ganti ini
                     });
                 } else {
                     app = initializeApp(firebaseConfig);
@@ -91,26 +92,46 @@
                 });
 
                 // Sort comments by timestamp client-side
-                comments.sort((a, b) => (a.timestamp?.toDate() || 0) - (b.timestamp?.toDate() || 0));
+                comments.sort((a, b) => {
+                    const timeA = a.timestamp && typeof a.timestamp.toDate === 'function' ? a.timestamp.toDate().getTime() : 0;
+                    const timeB = b.timestamp && typeof b.timestamp.toDate === 'function' ? b.timestamp.toDate().getTime() : 0;
+                    return timeA - timeB;
+                });
 
                 commentsList.innerHTML = ''; // Clear existing comments
-                comments.forEach(comment => {
-                    const commentElement = document.createElement('div');
-                    commentElement.className = 'bg-gray-100 p-4 rounded-lg mb-3 text-left text-gray-800 shadow-sm';
-                    const date = comment.timestamp ? new Date(comment.timestamp.toDate()).toLocaleString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Tanggal tidak diketahui'; // Contoh: 24/09/2025 08.00
-
-                    const senderName = comment.guestName || 'Tamu Anonim';
-                    commentElement.innerHTML = `
-                        <p class="font-semibold text-gray-900">${senderName}</p>
-                        <p class="text-sm text-gray-600 mb-2">${date}</p>
-                        <p class="text-base whitespace-pre-wrap">${comment.message}</p>
-                    `;
-                    commentsList.appendChild(commentElement);
-                });
-                commentsList.scrollTop = commentsList.scrollHeight; // Scroll to bottom on new comment
+                if (comments.length === 0) {
+                    commentsList.innerHTML = '<p class="text-center text-gray-400">Belum ada ucapan. Jadilah yang pertama!</p>';
+                } else {
+                    comments.forEach(comment => {
+                        const commentElement = document.createElement('div');
+                        // Use bg-transparent so it takes the parent's background (comments-display)
+                        commentElement.className = 'bg-transparent p-4 rounded-lg mb-3 text-left text-white shadow-sm border border-gray-700'; // Added border for separation
+                        
+                        // Improved date formatting and validation
+                        let formattedDate = 'Tanggal tidak diketahui';
+                        if (comment.timestamp && typeof comment.timestamp.toDate === 'function') {
+                            formattedDate = new Date(comment.timestamp.toDate()).toLocaleString('id-ID', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            });
+                        }
+                        
+                        const senderName = comment.guestName || 'Tamu Anonim';
+                        commentElement.innerHTML = `
+                            <p class="font-semibold text-white">${senderName}</p>
+                            <p class="text-sm text-gray-300 mb-2">${formattedDate}</p>
+                            <p class="text-base whitespace-pre-wrap">${comment.message}</p>
+                        `;
+                        commentsList.appendChild(commentElement);
+                    });
+                    commentsList.scrollTop = commentsList.scrollHeight; // Scroll to bottom on new comment
+                }
             }, (error) => {
                 console.error("Error listening to comments:", error);
-                commentsList.innerHTML = '<p class="text-red-500">Gagal memuat ucapan. Silakan coba lagi nanti.</p>';
+                commentsList.innerHTML = '<p class="text-red-300 text-center">Gagal memuat ucapan. Silakan periksa koneksi atau konfigurasi Firebase.</p>';
             });
 
             // Handle comment submission
@@ -120,25 +141,37 @@
 
             sendCommentButton.addEventListener('click', async () => {
                 const message = commentMessageInput.value.trim();
-                const guestName = guestNameInput.value.trim() || document.getElementById('guestNamePlaceholder').textContent; // Use input or URL name
+                const guestName = guestNameInput.value.trim(); // Get name from input field
 
                 if (message && guestName) {
                     try {
                         await addDoc(commentsCollectionRef, {
                             guestName: guestName,
                             message: message,
-                            timestamp: serverTimestamp(),
+                            timestamp: serverTimestamp(), // Ensure serverTimestamp() is used
                             userId: userId // Store the user ID
                         });
-                        commentMessageInput.value = ''; // Clear input
-                        // guestNameInput.value = ''; // Optionally clear guest name input if not from URL
-                        alert('Ucapan Anda berhasil dikirim!'); // Consider custom modal for better UX
+                        commentMessageInput.value = ''; // Clear message input
+                        
+                        const successMessageDiv = document.createElement('div');
+                        successMessageDiv.className = 'bg-green-500 text-white p-2 rounded-lg mt-2 mb-2';
+                        successMessageDiv.textContent = 'Ucapan Anda berhasil dikirim!';
+                        sendCommentButton.parentNode.insertBefore(successMessageDiv, sendCommentButton.nextSibling);
+                        setTimeout(() => successMessageDiv.remove(), 3000); // Remove after 3 seconds
                     } catch (e) {
                         console.error("Error adding document: ", e);
-                        alert('Gagal mengirim ucapan. Silakan coba lagi.'); // Consider custom modal
+                        const errorMessageDiv = document.createElement('div');
+                        errorMessageDiv.className = 'bg-red-500 text-white p-2 rounded-lg mt-2 mb-2';
+                        errorMessageDiv.textContent = 'Gagal mengirim ucapan. Silakan coba lagi.';
+                        sendCommentButton.parentNode.insertBefore(errorMessageDiv, sendCommentButton.nextSibling);
+                        setTimeout(() => errorMessageDiv.remove(), 5000); // Remove after 5 seconds
                     }
                 } else {
-                    alert('Nama dan ucapan tidak boleh kosong.'); // Consider custom modal
+                    const warningMessageDiv = document.createElement('div');
+                    warningMessageDiv.className = 'bg-yellow-500 text-white p-2 rounded-lg mt-2 mb-2';
+                    warningMessageDiv.textContent = 'Mohon isi Nama dan Ucapan Anda.';
+                    sendCommentButton.parentNode.insertBefore(warningMessageDiv, sendCommentButton.nextSibling);
+                    setTimeout(() => warningMessageDiv.remove(), 3000); // Remove after 3 seconds
                 }
             });
         }
@@ -146,7 +179,7 @@
         // Call initialization on DOMContentLoaded
         document.addEventListener('DOMContentLoaded', initializeFirebaseAndAuth);
 
-        // Other existing JavaScript logic
+        // Other existing JavaScript logic (moved outside the module for clarity, but still executed)
         document.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
             let guestName = urlParams.get('to');
@@ -157,6 +190,7 @@
                 document.getElementById('commentGuestName').value = guestName; // Pre-fill comment name
             } else {
                 document.getElementById('guestNamePlaceholder').textContent = 'Bapak/Ibu/Saudara/i';
+                document.getElementById('commentGuestName').value = ''; // Ensure empty if no name in URL
             }
 
             const preOpeningScreen = document.getElementById('preOpeningScreen');
@@ -426,7 +460,7 @@
             justify-content: center;
             gap: 1rem;
             margin-top: 1.5rem;
-            flex-wrap: wrap; /* Allow wrappwrapping on small screens */
+            flex-wrap: wrap; /* Allow wrapping on small screens */
         }
         .countdown-item {
             background-color: rgba(255, 255, 255, 0.1); /* Slightly transparent white for items */
@@ -445,16 +479,16 @@
             margin-top: 0.25rem;
         }
         /* Comment section styles */
-         .comments-display {
-            max-height: 400px;
-            overflow-y: auto;
-            padding-right: 10px;
+        .comments-display {
+            max-height: 400px; /* Limit height for scrollable comments */
+            overflow-y: auto; /* Enable vertical scrolling */
+            padding-right: 10px; /* Space for scrollbar */
             margin-bottom: 1rem;
-            background-color: rgba(0, 0, 0, 0.5); /* Same as sections */
+            /* Changed to match section background */
+            background-color: rgba(0, 0, 0, 0.5);
             border-radius: 0.75rem;
             padding: 1rem;
         }
-
         .comments-display::-webkit-scrollbar {
             width: 8px;
         }
@@ -484,6 +518,17 @@
         .comment-input-group input::placeholder,
         .comment-input-group textarea::placeholder {
             color: rgba(255, 255, 255, 0.7);
+        }
+        /* Style for individual comment items within comments-display */
+        .comments-display > div { /* Target the div that holds each comment */
+            background-color: transparent; /* Make individual comment background transparent */
+            border: 1px solid rgba(255, 255, 255, 0.2); /* Add a subtle border for separation */
+            margin-bottom: 0.75rem; /* Space between comments */
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+        .comments-display > div:last-child {
+            margin-bottom: 0; /* No margin after the last comment */
         }
 
 
@@ -794,7 +839,7 @@
 
             <!-- Footer -->
             <footer class="text-center text-gray-500 text-sm py-4">
-                &copy; 2025 Undangan Pernikahan. Dibuat dengan Cinta.
+                &copy; 2024 Undangan Pernikahan. Dibuat dengan Cinta.
             </footer>
         </div>
     </div>
@@ -813,7 +858,7 @@
         // Global variables provided by Canvas environment
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? initialAuthToken : null; // Fixed typo here
 
         let app;
         let db;
@@ -826,15 +871,15 @@
                 if (Object.keys(firebaseConfig).length === 0 || !firebaseConfig.projectId) {
                     console.warn("Firebase config not found or incomplete. Please provide __firebase_config.");
                     // Fallback for local testing without Canvas environment
-                    // YOU MUST REPLACE THESE WITH YOUR ACTUAL FIREBASE CONFIG
+                     // YOU MUST REPLACE THESE WITH YOUR ACTUAL FIREBASE CONFIG
                     // Get this from Firebase Console -> Project settings -> Your apps -> Web app -> Config
                     app = initializeApp({
-                        apiKey: "AIzaSyBck1L_R9RrXocDKo58RvwSbm7IPQQkbOk",
-                        authDomain: "undangan-sonia-suriansyah.firebaseapp.com",
-                        projectId: "undangan-sonia-suriansyah",
-                        storageBucket: "YOUR_FIREBASE_STORAGE_BUCKET",
-                        messagingSenderId: "undangan-sonia-suriansyah.firebasestorage.app",
-                        appId: "1:405367450209:web:0c2c8632dcdfd5e387d820"
+                        apiKey: "AIzaSyBck1L_R9RrXocDKo58RvwSbm7IPQQkbOk", // Ganti ini
+                        authDomain: "undangan-sonia-suriansyah.firebaseapp.com", // Ganti ini
+                        projectId: "undangan-sonia-suriansyah", // Ganti ini
+                        storageBucket: "undangan-sonia-suriansyah.firebasestorage.app", // Ganti ini
+                        messagingSenderId: "405367450209", // Ganti ini
+                        appId: "1:405367450209:web:0c2c8632dcdfd5e387d820" // Ganti ini
                     });
                 } else {
                     app = initializeApp(firebaseConfig);
@@ -887,7 +932,12 @@
                 });
 
                 // Sort comments by timestamp client-side
-                comments.sort((a, b) => (a.timestamp?.toDate() || 0) - (b.timestamp?.toDate() || 0));
+                comments.sort((a, b) => {
+                    // Robust check for timestamp and toDate() method
+                    const timeA = a.timestamp && typeof a.timestamp.toDate === 'function' ? a.timestamp.toDate().getTime() : 0;
+                    const timeB = b.timestamp && typeof b.timestamp.toDate === 'function' ? b.timestamp.toDate().getTime() : 0;
+                    return timeA - timeB;
+                });
 
                 commentsList.innerHTML = ''; // Clear existing comments
                 if (comments.length === 0) {
@@ -895,15 +945,26 @@
                 } else {
                     comments.forEach(comment => {
                         const commentElement = document.createElement('div');
-                        commentElement.className = 'bg-transparent p-4 rounded-lg mb-3 text-left text-white shadow-sm';
-// Kita pakai bg-transparent karena parent (comments-display) sudah punya background rgba(0,0,0,0.5)
-// Ini akan membuat setiap komentar individual menyatu dengan background comments-display
-; // Darker background for individual comments
-                        const date = comment.timestamp ? new Date(comment.timestamp.toDate()).toLocaleString('id-ID') : 'Tanggal tidak diketahui';
+                        // Use bg-transparent so it takes the parent's background (comments-display)
+                        // Added border for separation and subtle shadow
+                        commentElement.className = 'bg-transparent p-4 rounded-lg mb-3 text-left text-white shadow-sm border border-gray-700';
+                        
+                        // Improved date formatting and validation
+                        let formattedDate = 'Tanggal tidak diketahui';
+                        if (comment.timestamp && typeof comment.timestamp.toDate === 'function') {
+                            formattedDate = new Date(comment.timestamp.toDate()).toLocaleString('id-ID', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            });
+                        }
+                        
                         const senderName = comment.guestName || 'Tamu Anonim';
                         commentElement.innerHTML = `
                             <p class="font-semibold text-white">${senderName}</p>
-                            <p class="text-sm text-gray-300 mb-2">${date}</p>
+                            <p class="text-sm text-gray-300 mb-2">${formattedDate}</p>
                             <p class="text-base whitespace-pre-wrap">${comment.message}</p>
                         `;
                         commentsList.appendChild(commentElement);
@@ -929,12 +990,11 @@
                         await addDoc(commentsCollectionRef, {
                             guestName: guestName,
                             message: message,
-                            timestamp: serverTimestamp(),
+                            timestamp: serverTimestamp(), // Ensure serverTimestamp() is used
                             userId: userId // Store the user ID
                         });
                         commentMessageInput.value = ''; // Clear message input
-                        // guestNameInput.value is pre-filled from URL, so no need to clear unless desired
-                        // Display a temporary success message instead of alert
+                        
                         const successMessageDiv = document.createElement('div');
                         successMessageDiv.className = 'bg-green-500 text-white p-2 rounded-lg mt-2 mb-2';
                         successMessageDiv.textContent = 'Ucapan Anda berhasil dikirim!';
@@ -956,97 +1016,9 @@
                     setTimeout(() => warningMessageDiv.remove(), 3000); // Remove after 3 seconds
                 }
             });
-        }
-
-        // Call initialization on DOMContentLoaded
-        document.addEventListener('DOMContentLoaded', initializeFirebaseAndAuth);
-
-        // Other existing JavaScript logic (moved outside the module for clarity, but still executed)
-        document.addEventListener('DOMContentLoaded', function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            let guestName = urlParams.get('to');
-
-            if (guestName) {
-                guestName = decodeURIComponent(guestName.replace(/\+/g, ' '));
-                document.getElementById('guestNamePlaceholder').textContent = guestName;
-                document.getElementById('commentGuestName').value = guestName; // Pre-fill comment name
-            } else {
-                document.getElementById('guestNamePlaceholder').textContent = 'Bapak/Ibu/Saudara/i';
-                document.getElementById('commentGuestName').value = ''; // Ensure empty if no name in URL
-            }
-
-            const preOpeningScreen = document.getElementById('preOpeningScreen');
-            const mainContent = document.getElementById('mainContent');
-            const openInvitationButton = document.getElementById('openInvitationButton');
-            const backgroundMusic = document.getElementById('backgroundMusic');
-            const musicToggleButtonPre = document.getElementById('musicToggleButtonPre');
-            const playIconPre = document.getElementById('playIconPre');
-            const pauseIconPre = document.getElementById('pauseIconPre');
-
-            // Initial state for music button on pre-opening screen
-            playIconPre.classList.remove('hidden');
-            pauseIconPre.classList.add('hidden');
-
-            // Handle music toggle on pre-opening screen
-            musicToggleButtonPre.addEventListener('click', function(event) {
-                event.stopPropagation(); // Prevent click from bubbling to openInvitationButton
-                if (backgroundMusic.paused) {
-                    backgroundMusic.play();
-                    playIconPre.classList.add('hidden');
-                    pauseIconPre.classList.remove('hidden');
-                } else {
-                    backgroundMusic.pause();
-                    playIconPre.classList.remove('hidden');
-                    pauseIconPre.classList.add('hidden');
-                }
-            });
-
-            // Open invitation and start music on button click
-            openInvitationButton.addEventListener('click', function() {
-                preOpeningScreen.classList.add('hidden'); // Hide pre-opening screen
-                mainContent.classList.remove('hidden'); // Show main content
-                backgroundMusic.play().catch(error => {
-                    console.log('Music play failed after click:', error);
-                });
-
-                // Scroll to top of the main content after opening
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
-
-            // Countdown Timer Logic
-            // Set the date we're counting down to (Rabu, 24 September 2025, 08:00 WITA)
-            // Note: Months are 0-indexed (September is 8)
-            const countDownDate = new Date("Sep 24, 2025 08:00:00 GMT+0800").getTime(); // WITA is GMT+8
-
-            const x = setInterval(function() {
-                const now = new Date().getTime();
-                const distance = countDownDate - now;
-
-                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-                // Display the result in the elements
-                document.getElementById("days").textContent = String(days).padStart(2, '0');
-                document.getElementById("hours").textContent = String(hours).padStart(2, '0');
-                document.getElementById("minutes").textContent = String(minutes).padStart(2, '0');
-                document.getElementById("seconds").textContent = String(seconds).padStart(2, '0');
-
-                // If the countdown is over, write some text
-                if (distance < 0) {
-                    clearInterval(x);
-                    document.getElementById("days").textContent = "00";
-                    document.getElementById("hours").textContent = "00";
-                    document.getElementById("minutes").textContent = "00";
-                    document.getElementById("seconds").textContent = "00";
-                    document.querySelector('.countdown-timer').innerHTML = '<p class="text-xl">Acara telah berlangsung!</p>';
-                }
-            }, 1000);
         });
     </script>
 </body>
 </html>
-
-
-                            
+                        
+    
