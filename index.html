@@ -290,7 +290,300 @@
                 padding: 0.7rem 1.5rem;
             }
         }
+        <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            /* New background for the entire body */
+            background-image: url('https://raw.githubusercontent.com/suriansyahdmw28-ops/Undangan/31b009a007ed178492d6fdbb2df1526af740a953/peaceminusone-graphics-design-q6iqw9nxw7r8g82s.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed; /* Keep background fixed when scrolling */
+            color: #FFFFFF; /* Default text color for body, will be overridden by sections */
+            line-height: 1.6;
+            scroll-behavior: smooth;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 1rem; /* Responsive padding */
+        }
+        .section {
+            /* Semi-transparent dark overlay for sections */
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+            border-radius: 1.5rem; /* More rounded corners */
+            padding: 2.5rem 2rem; /* Responsive padding */
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08); /* Softer shadow */
+            text-align: center;
+            color: #FFFFFF; /* Text color for content sections */
+        }
+        .hero-section {
+            /* Now a semi-transparent black background, same as other sections */
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+            background-size: cover; /* Keep this for consistency, though not strictly needed for solid color */
+            background-position: center;
+            color: white; /* Text color for hero section */
+            padding: 6rem 1rem; /* Responsive padding */
+            border-radius: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
+            min-height: 400px; /* Ensure a minimum height */
+        }
+        .heading-font {
+            font-family: 'Playfair Display', serif;
+        }
+        .names {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 3.5rem; /* Larger names */
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            color: #FFFFFF; /* Names color for hero/pre-opening */
+            line-height: 1.1;
+            text-align: center; /* Memusatkan teks nama mempelai */
+        }
+        .and-text {
+            font-size: 2rem;
+            font-weight: 400;
+            color: #FFFFFF; /* And text color for hero/pre-opening */
+        }
+        .date-time {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #FFFFFF; /* Date/time color for hero/pre-opening */
+        }
+        .button {
+            display: inline-block;
+            background-color: #A0522D; /* Terra cotta */
+            color: white;
+            padding: 0.85rem 2rem;
+            border-radius: 0.75rem; /* More rounded */
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 10px rgba(160, 82, 45, 0.3);
+        }
+        .button:hover {
+            background-color: #8B4513; /* Darker Sienna */
+            transform: translateY(-2px);
+        }
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Slightly larger grid items */
+            gap: 1.5rem; /* More spacing */
+            margin-top: 1.5rem;
+        }
+        .gallery-item img {
+            width: 100%;
+            height: 250px; /* Taller images */
+            object-fit: cover;
+            border-radius: 1rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .gallery-item img:hover {
+            transform: scale(1.03);
+        }
+        .divider {
+            width: 80px;
+            height: 3px;
+            background-color: #A0522D;
+            margin: 1.5rem auto;
+            border-radius: 5px;
+        }
+        .music-controls {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            z-index: 1000;
+            transition: opacity 0.5s ease; /* For fading in/out */
+        }
+        .music-button {
+            background-color: #A0522D;
+            color: white;
+            border-radius: 9999px; /* Full rounded */
+            padding: 0.75rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+        }
+        .music-button:hover {
+            background-color: #8B4513;
+        }
+
+        /* Pre-opening screen styles */
+        .pre-opening-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Background image from user's GitHub raw link (going_merry) */
+            background-image: url('https://raw.githubusercontent.com/suriansyahdmw28-ops/Undangan/31b009a007ed178492d6fdbb2df1526af740a953/going_merry.jpg');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
+            z-index: 2000; /* On top of everything */
+            transition: opacity 1s ease-out, visibility 1s ease-out;
+            opacity: 1;
+            visibility: visible;
+        }
+        .pre-opening-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .pre-opening-screen .names {
+            font-size: 4rem; /* Larger names for opening */
+            margin-bottom: 1rem;
+        }
+        .pre-opening-screen .and-text {
+            font-size: 2.5rem;
+        }
+        .pre-opening-screen .button {
+            margin-top: 2rem;
+            font-size: 1.2rem;
+            padding: 1rem 2.5rem;
+        }
+
+        /* Specific text colors within sections to ensure white */
+        .section p, .section h2, .section strong, .section a {
+            color: #FFFFFF; /* Ensure all text inside sections is white */
+        }
+        .section a.button { /* Keep button text white */
+            color: white;
+        }
+        .section .names, .section .and-text, .section .date-time {
+            color: #FFFFFF; /* Ensure names/date-time in sections are white */
+        }
+
+        /* Styles for the bank account box to make text visible */
+        .section .grid .p-4 {
+            background-color: white !important; /* Make it pure white and override any other background */
+            color: black !important; /* Set text inside this div to black */
+        }
+        .section .grid .p-4 p,
+        .section .grid .p-4 .font-semibold,
+        .section .grid .p-4 .text-sm {
+            color: black !important; /* Explicitly ensure all text elements inside this div are black */
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0.75rem; /* Smaller padding on mobile */
+            }
+            .section {
+                padding: 1.5rem 1rem; /* Smaller padding on mobile */
+                margin-bottom: 1.5rem;
+            }
+            .hero-section {
+                padding: 3rem 0.5rem; /* Smaller padding on mobile */
+                min-height: 280px;
+            }
+            .names {
+                font-size: 2.5rem; /* Smaller font size */
+            }
+            .and-text {
+                font-size: 1.4rem; /* Smaller font size */
+            }
+            .date-time {
+                font-size: 1.1rem; /* Smaller font size */
+            }
+            .text-lg { /* Adjust general text size */
+                font-size: 1rem;
+            }
+            .text-xl {
+                font-size: 1.125rem;
+            }
+            .text-2xl {
+                font-size: 1.5rem;
+            }
+            .text-3xl {
+                font-size: 1.875rem;
+            }
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Smaller grid size */
+                gap: 1rem;
+            }
+            .gallery-item img {
+                height: 180px; /* Smaller gallery image height */
+            }
+            .music-controls {
+                bottom: 1rem;
+                right: 1rem;
+            }
+            .music-button {
+                width: 45px;
+                height: 45px;
+                padding: 0.6rem;
+            }
+            .pre-opening-screen .names {
+                font-size: 3rem;
+            }
+            .pre-opening-screen .and-text {
+                font-size: 2rem;
+            }
+            .pre-opening-screen .button {
+                font-size: 1.1rem;
+                padding: 0.8rem 2rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .names {
+                font-size: 2rem;
+            }
+            .and-text {
+                font-size: 1.2rem;
+            }
+            .date-time {
+                font-size: 0.9rem;
+            }
+            .hero-section {
+                padding: 2.5rem 0.5rem;
+                min-height: 250px;
+            }
+            .section {
+                padding: 1rem 0.75rem;
+                margin-bottom: 1rem;
+            }
+            .button {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.9rem;
+            }
+            .gallery-grid {
+                grid-template-columns: 1fr; /* Single column on very small screens */
+            }
+            .gallery-item img {
+                height: 200px; /* Reasonable height for single column */
+            }
+            .pre-opening-screen .names {
+                font-size: 2.5rem;
+            }
+            .pre-opening-screen .and-text {
+                font-size: 1.5rem;
+            }
+            .pre-opening-screen .button {
+                font-size: 1rem;
+                padding: 0.7rem 1.5rem;
+            }
+        }
     </style>
+
+</style>
 </head>
 <body>
     <!-- Pre-opening Screen -->
