@@ -97,7 +97,8 @@
                 comments.forEach(comment => {
                     const commentElement = document.createElement('div');
                     commentElement.className = 'bg-gray-100 p-4 rounded-lg mb-3 text-left text-gray-800 shadow-sm';
-                    const date = comment.timestamp ? new Date(comment.timestamp.toDate()).toLocaleString('id-ID') : 'Tanggal tidak diketahui';
+                    const date = comment.timestamp ? new Date(comment.timestamp.toDate()).toLocaleString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Tanggal tidak diketahui'; // Contoh: 24/09/2025 08.00
+
                     const senderName = comment.guestName || 'Tamu Anonim';
                     commentElement.innerHTML = `
                         <p class="font-semibold text-gray-900">${senderName}</p>
@@ -444,15 +445,16 @@
             margin-top: 0.25rem;
         }
         /* Comment section styles */
-        .comments-display {
-            max-height: 400px; /* Limit height for scrollable comments */
-            overflow-y: auto; /* Enable vertical scrolling */
-            padding-right: 10px; /* Space for scrollbar */
+         .comments-display {
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 10px;
             margin-bottom: 1rem;
-            background-color: rgba(255, 255, 255, 0.1); /* Light background for comments list */
+            background-color: rgba(0, 0, 0, 0.5); /* Same as sections */
             border-radius: 0.75rem;
             padding: 1rem;
         }
+
         .comments-display::-webkit-scrollbar {
             width: 8px;
         }
@@ -893,7 +895,10 @@
                 } else {
                     comments.forEach(comment => {
                         const commentElement = document.createElement('div');
-                        commentElement.className = 'bg-white bg-opacity-10 p-4 rounded-lg mb-3 text-left text-white shadow-sm'; // Darker background for individual comments
+                        commentElement.className = 'bg-transparent p-4 rounded-lg mb-3 text-left text-white shadow-sm';
+// Kita pakai bg-transparent karena parent (comments-display) sudah punya background rgba(0,0,0,0.5)
+// Ini akan membuat setiap komentar individual menyatu dengan background comments-display
+; // Darker background for individual comments
                         const date = comment.timestamp ? new Date(comment.timestamp.toDate()).toLocaleString('id-ID') : 'Tanggal tidak diketahui';
                         const senderName = comment.guestName || 'Tamu Anonim';
                         commentElement.innerHTML = `
