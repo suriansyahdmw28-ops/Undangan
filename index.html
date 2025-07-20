@@ -11,8 +11,12 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #FDF8F5; /* Soft cream background */
-            color: #4A4A4A; /* Dark gray for text */
+            /* New background for the entire body */
+            background-image: url('https://raw.githubusercontent.com/suriansyahdmw28-ops/Undangan/31b009a007ed178492d6fdbb2df1526af740a953/peaceminusone-graphics-design-q6iqw9nxw7r8g82s.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed; /* Keep background fixed when scrolling */
+            color: #FFFFFF; /* Default text color for body, will be overridden by sections */
             line-height: 1.6;
             scroll-behavior: smooth;
             overflow-x: hidden; /* Prevent horizontal scroll */
@@ -23,19 +27,21 @@
             padding: 1rem; /* Responsive padding */
         }
         .section {
-            background-color: #FFFFFF;
+            /* Semi-transparent dark overlay for sections */
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
             border-radius: 1.5rem; /* More rounded corners */
             padding: 2.5rem 2rem; /* Responsive padding */
             margin-bottom: 2rem;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08); /* Softer shadow */
             text-align: center;
+            color: #FFFFFF; /* Text color for content sections */
         }
         .hero-section {
-            /* Background image from user's new Google Drive link */
+            /* Background image from user's GitHub raw link (going_merry) */
             background-image: url('https://raw.githubusercontent.com/suriansyahdmw28-ops/Undangan/31b009a007ed178492d6fdbb2df1526af740a953/going_merry.jpg');
             background-size: cover;
             background-position: center;
-            color: white;
+            color: white; /* Text color for hero section */
             padding: 6rem 1rem; /* Responsive padding */
             border-radius: 1.5rem;
             margin-bottom: 2rem;
@@ -55,18 +61,18 @@
             font-size: 3.5rem; /* Larger names */
             margin-top: 1rem;
             margin-bottom: 0.5rem;
-            color: #8B4513; /* Sienna color */
+            color: #FFFFFF; /* Names color for hero/pre-opening */
             line-height: 1.1;
         }
         .and-text {
             font-size: 2rem;
             font-weight: 400;
-            color: #A0522D; /* Terra cotta */
+            color: #FFFFFF; /* And text color for hero/pre-opening */
         }
         .date-time {
             font-size: 1.4rem;
             font-weight: 600;
-            color: #A0522D;
+            color: #FFFFFF; /* Date/time color for hero/pre-opening */
         }
         .button {
             display: inline-block;
@@ -138,8 +144,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            /* Background image from user's new Google Drive link */
-            background-image: url('https://raw.githubusercontent.com/suriansyahdmw28-ops/Undangan/31b009a007ed178492d6fdbb2df1526af740a953/peaceminusone-graphics-design-q6iqw9nxw7r8g82s.jpg');
+            /* Background image from user's GitHub raw link (going_merry) */
+            background-image: url('https://raw.githubusercontent.com/suriansyahdmw28-ops/Undangan/31b009a007ed178492d6fdbb2df1526af740a953/going_merry.jpg');
             background-size: cover;
             background-position: center;
             display: flex;
@@ -168,6 +174,17 @@
             margin-top: 2rem;
             font-size: 1.2rem;
             padding: 1rem 2.5rem;
+        }
+
+        /* Specific text colors within sections to ensure white */
+        .section p, .section h2, .section strong, .section a {
+            color: #FFFFFF; /* Ensure all text inside sections is white */
+        }
+        .section a.button { /* Keep button text white */
+            color: white;
+        }
+        .section .names, .section .and-text, .section .date-time {
+            color: #FFFFFF; /* Ensure names/date-time in sections are white */
         }
 
         /* Responsive adjustments */
@@ -317,28 +334,28 @@
 
             <!-- To Guest Section -->
             <div class="section">
-                <p class="text-lg md:text-xl text-gray-700 mb-4 heading-font">Kepada Yth.</p>
-                <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2 heading-font">
+                <p class="text-lg md:text-xl mb-4 heading-font">Kepada Yth.</p>
+                <h2 class="text-2xl md:text-3xl font-bold mb-2 heading-font">
                     <span id="guestNamePlaceholder">Bapak/Ibu/Saudara/i</span>
                 </h2>
-                <p class="text-md text-gray-600">Tanpa mengurangi rasa hormat, kami mengundang Anda untuk hadir di acara pernikahan kami.</p>
+                <p class="text-md">Tanpa mengurangi rasa hormat, kami mengundang Anda untuk hadir di acara pernikahan kami.</p>
             </div>
 
             <!-- Opening Verse/Quote Section -->
             <div class="section">
-                <h2 class="text-2xl md:text-3xl font-bold mb-4 text-gray-800 heading-font">Bismillahirrahmanirrahim</h2>
-                <p class="text-lg text-gray-600 italic">
+                <h2 class="text-2xl md:text-3xl font-bold mb-4 heading-font">Bismillahirrahmanirrahim</h2>
+                <p class="text-lg italic">
                     "Maha Suci Allah yang telah menciptakan semuanya berpasang-pasangan, baik dari apa yang ditumbuhkan oleh bumi dan dari diri mereka sendiri maupun dari apa yang tidak mereka ketahui."
                 </p>
-                <p class="text-md text-gray-500 mt-2">— QS. Yasin : 36</p>
+                <p class="text-md mt-2">— QS. Yasin : 36</p>
             </div>
 
             <!-- Event Details Section - Akad Nikah -->
             <div class="section">
-                <h2 class="text-3xl font-bold mb-4 text-gray-800 heading-font">Akad Nikah</h2>
+                <h2 class="text-3xl font-bold mb-4 heading-font">Akad Nikah</h2>
                 <p class="date-time text-2xl font-semibold mb-2">Rabu, 24 September 2025</p>
-                <p class="text-xl text-gray-700 mb-4">Pukul 08:00 WITA</p>
-                <p class="text-lg text-gray-600">
+                <p class="text-xl mb-4">Pukul 08:00 WITA</p>
+                <p class="text-lg">
                     <strong>Lokasi:</strong> Rumah Mempelai<br>
                     Samping Masjid Jabal Rahmah Mandin, Pulau Laut Utara, Kab. Kotabaru, Kalimantan Selatan 72114
                 </p>
@@ -347,10 +364,10 @@
 
             <!-- Event Details Section - Resepsi -->
             <div class="section">
-                <h2 class="text-3xl font-bold mb-4 text-gray-800 heading-font">Resepsi</h2>
+                <h2 class="text-3xl font-bold mb-4 heading-font">Resepsi</h2>
                 <p class="date-time text-2xl font-semibold mb-2">Rabu, 24 September 2025</p>
-                <p class="text-xl text-gray-700 mb-4">Pukul 10:00 WITA - Selesai</p>
-                <p class="text-lg text-gray-600">
+                <p class="text-xl mb-4">Pukul 10:00 WITA - Selesai</p>
+                <p class="text-lg">
                     <strong>Lokasi:</strong> Rumah Mempelai<br>
                     Samping Masjid Jabal Rahmah Mandin, Pulau Laut Utara, Kab. Kotabaru, Kalimantan Selatan 72114
                 </p>
@@ -359,13 +376,13 @@
 
             <!-- Gallery Section -->
             <div class="section">
-                <h2 class="text-3xl font-bold mb-4 text-gray-800 heading-font">Galeri Momen</h2>
+                <h2 class="text-3xl font-bold mb-4 heading-font">Galeri Momen</h2>
                 <div class="gallery-grid">
                     <div class="gallery-item">
-                        <img src="https://drive.google.com/uc?export=download&id=1zQaDUcNVM35a9Km5QRO2siOAC-pLXdy2" alt="Foto Pernikahan 1" onerror="this.onerror=null;this.src='https://placehold.co/400x300/E0BBE4/957DAD?text=Foto+1';">
+                        <img src="https://raw.githubusercontent.com/suriansyahdmw28-ops/Undangan/31b009a007ed178492d6fdbb2df1526af740a953/peaceminusone-graphics-design-q6iqw9nxw7r8g82s.jpg" alt="Foto Pernikahan 1" onerror="this.onerror=null;this.src='https://placehold.co/400x300/E0BBE4/957DAD?text=Foto+1';">
                     </div>
                     <div class="gallery-item">
-                        <img src="http://googleusercontent.com/file_content/uploaded:1000110423.webp-ab8a6643-52b8-4a15-a4df-77ed94b40ff8" alt="Foto Pernikahan 2" onerror="this.onerror=null;this.src='https://placehold.co/400x300/957DAD/E0BBE4?text=Foto+2';">
+                        <img src="https://placehold.co/400x300/957DAD/E0BBE4?text=Foto+2" alt="Foto Pernikahan 2" onerror="this.onerror=null;this.src='https://placehold.co/400x300/957DAD/E0BBE4?text=Foto+2';">
                     </div>
                     <div class="gallery-item">
                         <img src="https://placehold.co/400x300/D291BC/6A0572?text=Foto+3" alt="Foto Pernikahan 3" onerror="this.onerror=null;this.src='https://placehold.co/400x300/D291BC/6A0572?text=Foto+3';">
@@ -378,62 +395,60 @@
 
             <!-- Gift Information Section (Optional) -->
             <div class="section">
-                <h2 class="text-3xl font-bold mb-4 text-gray-800 heading-font">Hadiah & Doa Restu</h2>
-                <p class="text-lg text-gray-600 mb-4">
+                <h2 class="text-3xl font-bold mb-4 heading-font">Hadiah & Doa Restu</h2>
+                <p class="text-lg mb-4">
                     Kehadiran dan doa restu Anda adalah hadiah terindah bagi kami. Namun, jika Anda ingin memberikan tanda kasih, Anda dapat menyalurkannya melalui:
                 </p>
                 <div class="grid grid-cols-1 gap-4 text-left">
                     <div class="p-4 bg-gray-50 rounded-lg">
-                        <p class="font-semibold text-gray-700">Bank Mandiri</p>
-                        <p class="text-sm text-gray-600">No. Rekening: 310021268571</p>
-                        <p class="text-sm text-gray-600">Atas Nama: Sonia Agustina Oemar</p>
+                        <p class="font-semibold">Bank Mandiri</p>
+                        <p class="text-sm">No. Rekening: 310021268571</p>
+                        <p class="text-sm">Atas Nama: Sonia Agustina Oemar</p>
                     </div>
                 </div>
             </div>
 
             <!-- Comment/Ucapan Selamat Section -->
             <div class="section">
-                <h2 class="text-3xl font-bold mb-4 text-gray-800 heading-font">Kirim Ucapan & Doa</h2>
-                <p class="text-lg text-gray-600 mb-4">
+                <h2 class="text-3xl font-bold mb-4 heading-font">Kirim Ucapan & Doa</h2>
+                <p class="text-lg mb-4">
                     Silakan tinggalkan pesan, doa, atau ucapan selamat Anda untuk kami.
                 </p>
-                <textarea id="commentMessage" class="w-full p-3 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-orange-300" rows="5" placeholder="Tulis ucapan Anda di sini..."></textarea>
+                <textarea id="commentMessage" class="w-full p-3 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-orange-300 text-gray-800" rows="5" placeholder="Tulis ucapan Anda di sini..."></textarea>
                 <button id="sendCommentButton" class="button">Kirim Ucapan via WhatsApp</button>
-                <p class="text-sm text-gray-500 mt-2">
+                <p class="text-sm mt-2">
                     *Pesan akan dikirimkan langsung ke WhatsApp mempelai.
                 </p>
             </div>
 
             <!-- Closing Section -->
             <div class="section">
-                <h2 class="text-3xl font-bold mb-4 text-gray-800 heading-font">Terima Kasih</h2>
-                <p class="text-lg text-gray-600">
+                <h2 class="text-3xl font-bold mb-4 heading-font">Terima Kasih</h2>
+                <p class="text-lg">
                     Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa restu.
                 </p>
-                <p class="text-lg text-gray-600 mt-4">
+                <p class="text-lg mt-4">
                     Atas kehadiran dan doa restunya, kami mengucapkan terima kasih.
                 </p>
                 <div class="divider"></div>
                 <p class="names text-3xl mt-6">
                     Sonia Agustina Oemar & Suriansyah
                 </p>
-                <p class="text-md text-gray-500 mt-2">
+                <p class="text-md mt-2">
                     Keluarga Besar
                 </p>
             </div>
 
             <!-- Footer -->
             <footer class="text-center text-gray-500 text-sm py-4">
-                &copy; 2025 Undangan Pernikahan. Dibuat dengan Cinta.
+                &copy; 2024 Undangan Pernikahan. Dibuat dengan Cinta.
             </footer>
         </div>
     </div>
 
     <!-- Audio for Background Music -->
     <audio id="backgroundMusic" loop>
-        <!-- Direct link to your music file.
-             If this doesn't work, consider hosting the MP3 directly on GitHub
-             and using its raw link. -->
+        <!-- Music from user's GitHub raw link -->
         <source src="https://github.com/suriansyahdmw28-ops/Undangan/raw/refs/heads/main/bigbangstill.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
@@ -445,67 +460,4 @@
 
             if (guestName) {
                 guestName = decodeURIComponent(guestName.replace(/\+/g, ' '));
-                document.getElementById('guestNamePlaceholder').textContent = guestName;
-            } else {
-                document.getElementById('guestNamePlaceholder').textContent = 'Bapak/Ibu/Saudara/i';
-            }
-
-            const preOpeningScreen = document.getElementById('preOpeningScreen');
-            const mainContent = document.getElementById('mainContent');
-            const openInvitationButton = document.getElementById('openInvitationButton');
-            const backgroundMusic = document.getElementById('backgroundMusic');
-            const musicToggleButtonPre = document.getElementById('musicToggleButtonPre');
-            const playIconPre = document.getElementById('playIconPre');
-            const pauseIconPre = document.getElementById('pauseIconPre');
-
-            // Initial stscreen
-            playIconPre.classList.remove('hidden');
-            pauseIconPre.classList.add('hidden');
-
-            // Handle music toggle on pre-opening screen
-            musicToggleButtonPre.addEventListener('click', function(event) {
-                event.stopPropagation(); // Prevent click from bubbling to openInvitationButton
-                if (backgroundMusic.paused) {
-                    backgroundMusic.play();
-                    playIconPre.classList.add('hidden');
-                    pauseIconPre.classList.remove('hidden');
-                } else {
-                    backgroundMusic.pause();
-                    playIconPre.classList.remove('hidden');
-                    pauseIconPre.classList.add('hidden');
-                }
-            });
-
-            // Open invitation and start music on button click
-            openInvitationButton.addEventListener('click', function() {
-                preOpeningScreen.classList.add('hidden'); // Hide pre-opening screen
-                mainContent.classList.remove('hidden'); // Show main content
-                backgroundMusic.play().catch(error => {
-                    console.log('Music play failed after click:', error);
-                });
-
-                // Scroll to top of the main content after opening
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
-
-            // JavaScript for Comment Section (Send via WhatsApp)
-            const sendCommentButton = document.getElementById('sendCommentButton');
-            const commentMessage = document.getElementById('commentMessage');
-            const brideName = "Sonia Agustina Oemar";
-            const groomName = "Suriansyah";
-            const whatsappNumber = "6281234567890"; // Ganti dengan nomor WhatsApp mempelai (tanpa +)
-
-            sendCommentButton.addEventListener('click', function() {
-                const message = commentMessage.value.trim();
-                if (message) {
-                    const fullMessage = `Ucapan dari ${document.getElementById('guestNamePlaceholder').textContent}:\n\n"${message}"\n\nSelamat atas pernikahan ${brideName} & ${groomName}!`;
-                    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(fullMessage)}`;
-                    window.open(whatsappUrl, '_blank');
-                } else {
-                    alert('Mohon tulis ucapan Anda terlebih dahulu.'); // Using alert for simplicity, consider custom modal for better UX
-                }
-            });
-        });
-    </script>
-</body>
-</html>
+    
