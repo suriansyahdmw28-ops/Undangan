@@ -585,7 +585,7 @@
 
             <!-- Footer -->
             <footer class="text-center text-gray-500 text-sm py-4">
-                &copy; 2025 Undangan Pernikahan. Dibuat dengan Cinta.
+                &copy; 2024 Undangan Pernikahan. Dibuat dengan Cinta.
             </footer>
         </div>
     </div>
@@ -600,56 +600,67 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js"; // Added Analytics import
 
         // Global variables provided by Canvas environment
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null; // Corrected typo here
+        const firebaseConfigFromCanvas = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null; 
 
         let app;
         let db;
         let auth;
         let userId; // Will store the current user's ID
+        let analytics; // Declare analytics variable
 
         // Initialize Firebase and authenticate
         async function initializeFirebaseAndAuth() {
+            console.log("Initializing Firebase...");
             try {
-                // Check if firebaseConfig is empty or missing projectId (common issue in Canvas when not provided)
-                if (Object.keys(firebaseConfig).length === 0 || !firebaseConfig.projectId) {
-                    console.warn("Firebase config not found or incomplete. Please provide __firebase_config.");
-                    // FALLBACK FOR LOCAL TESTING: REPLACE THESE WITH YOUR ACTUAL FIREBASE CONFIG
-                    // Get this from Firebase Console -> Project settings -> Your apps -> Web app -> Config
+                // Use user's provided Firebase config directly if Canvas config is not present/complete
+                if (Object.keys(firebaseConfigFromCanvas).length === 0 || !firebaseConfigFromCanvas.projectId) {
+                    console.warn("Canvas-provided Firebase config not found or incomplete. Using hardcoded config.");
+                    // YOUR ACTUAL FIREBASE CONFIG GOES HERE
+                    // This is the config you provided:
                     app = initializeApp({
-                        apiKey: "AIzaSyBck1L_R9RrXocDKo58RvwSbm7IPQQkbOk", // <<< GANTI INI DENGAN API KEY ASLI ANDA
-                        authDomain: "undangan-sonia-suriansyah.firebaseapp.com", // <<< GANTI INI DENGAN AUTH DOMAIN ASLI ANDA
-                        projectId: "undangan-sonia-suriansyah", // <<< GANTI INI DENGAN PROJECT ID ASLI ANDA
-                        storageBucket: "undangan-sonia-suriansyah.firebasestorage.app", // <<< GANTI INI DENGAN STORAGE BUCKET ASLI ANDA
-                        messagingSenderId: "405367450209", // <<< GANTI INI DENGAN MESSAGING SENDER ID ASLI ANDA
-                        appId: "1:405367450209:web:0c2c8632dcdfd5e387d820" // <<< GANTI INI DENGAN APP ID ASLI ANDA
+                        apiKey: "AIzaSyBck1L_R9RrXocDKo58RvwSbm7IPQQkbOk",
+                        authDomain: "undangan-sonia-suriansyah.firebaseapp.com",
+                        projectId: "undangan-sonia-suriansyah",
+                        storageBucket: "undangan-sonia-suriansyah.firebasestorage.app",
+                        messagingSenderId: "405367450209",
+                        appId: "1:405367450209:web:0c2c8632dcdfd5e387d820",
+                        measurementId: "G-G64JCW3QX9" // Added measurementId
                     });
+                    analytics = getAnalytics(app); // Initialize Analytics here
+                    console.log("Using hardcoded Firebase config from user. Analytics initialized.");
                 } else {
                     // Use the config provided by the Canvas environment
-                    app = initializeApp(firebaseConfig);
+                    app = initializeApp(firebaseConfigFromCanvas);
+                    analytics = getAnalytics(app); // Initialize Analytics here
+                    console.log("Using Canvas-provided Firebase config. Analytics initialized.");
                 }
 
                 db = getFirestore(app);
                 auth = getAuth(app);
+                console.log("Firebase app, db, and auth initialized.");
 
                 // Sign in with custom token if available, otherwise anonymously
                 if (initialAuthToken) {
+                    console.log("Attempting sign-in with custom token...");
                     await signInWithCustomToken(auth, initialAuthToken);
                 } else {
+                    console.log("Attempting anonymous sign-in...");
                     await signInAnonymously(auth);
                 }
 
                 onAuthStateChanged(auth, (user) => {
                     if (user) {
                         userId = user.uid;
-                        console.log("User authenticated:", userId);
+                        console.log("User authenticated. User ID:", userId);
                         document.getElementById('currentUserId').textContent = `User ID: ${userId}`;
                         setupRealtimeComments(); // Start listening for comments after auth
                     } else {
-                        console.log("No user is signed in.");
+                        console.log("No user is signed in. Generating anonymous ID.");
                         userId = crypto.randomUUID(); // Generate a random ID for unauthenticated users
                         document.getElementById('currentUserId').textContent = `User ID (Anon): ${userId}`;
                         setupRealtimeComments(); // Still try to load comments
@@ -657,16 +668,16 @@
                 });
 
             } catch (error) {
-                console.error("Error initializing Firebase or authenticating:", error);
-                // Fallback for userId if auth fails completely
+                console.error("ERROR: Failed to initialize Firebase or authenticate:", error);
                 userId = crypto.randomUUID();
                 document.getElementById('currentUserId').textContent = `User ID (Error/Anon): ${userId}`;
-                setupRealtimeComments(); // Still try to load comments
+                setupRealtimeComments(); // Still try to load comments, but expect issues
             }
         }
 
         // Setup real-time comments
         function setupRealtimeComments() {
+            console.log("Setting up real-time comments listener...");
             // Path to your public comments collection
             const commentsCollectionRef = collection(db, `artifacts/${appId}/public/data/comments`);
             const commentsList = document.getElementById('commentsList');
@@ -674,6 +685,7 @@
             // Listen for real-time updates
             // IMPORTANT: orderBy is restricted in Canvas environment. Fetch all and sort client-side.
             onSnapshot(commentsCollectionRef, (snapshot) => {
+                console.log("Received Firestore snapshot. Number of documents:", snapshot.size);
                 const comments = [];
                 snapshot.forEach(doc => {
                     comments.push({ id: doc.id, ...doc.data() });
@@ -720,7 +732,7 @@
                     commentsList.scrollTop = commentsList.scrollHeight; // Scroll to bottom on new comment
                 }
             }, (error) => {
-                console.error("Error listening to comments:", error);
+                console.error("ERROR: Firestore onSnapshot failed:", error);
                 commentsList.innerHTML = '<p class="text-red-300 text-center">Gagal memuat ucapan. Silakan periksa koneksi atau konfigurasi Firebase.</p>';
             });
 
@@ -734,6 +746,7 @@
                 const guestName = guestNameInput.value.trim(); // Get name from input field
 
                 if (message && guestName) {
+                    console.log("Attempting to send comment...");
                     try {
                         await addDoc(commentsCollectionRef, {
                             guestName: guestName,
@@ -748,8 +761,9 @@
                         successMessageDiv.textContent = 'Ucapan Anda berhasil dikirim!';
                         sendCommentButton.parentNode.insertBefore(successMessageDiv, sendCommentButton.nextSibling);
                         setTimeout(() => successMessageDiv.remove(), 3000); // Remove after 3 seconds
+                        console.log("Comment sent successfully!");
                     } catch (e) {
-                        console.error("Error adding document: ", e);
+                        console.error("ERROR: Failed to add document to Firestore:", e);
                         const errorMessageDiv = document.createElement('div');
                         errorMessageDiv.className = 'bg-red-500 text-white p-2 rounded-lg mt-2 mb-2';
                         errorMessageDiv.textContent = 'Gagal mengirim ucapan. Silakan coba lagi.';
