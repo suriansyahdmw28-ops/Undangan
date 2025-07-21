@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Undangan Pernikahan - Sonia & Suriansyah</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Inter for body, Playfair Display for headings -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            /* New background for the entire body */
+            background-image: url('https://raw.githubusercontent.com/suriansyahdmw28-ops/Undangan/31b009a007ed178492d6fdbb2df1526af740a953/peaceminusone-graphics-design-q6iqw9nxw7r8g82s.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed; /* Keep background fixed when scrolling */
+            color: #FFFFFF; /* Default text color for body, will be overridden by sections */
+            line-height: 1.6;
+            scroll-behavior: smooth;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 1rem; /* Responsive padding */
+        }
+        .section {
+            /* Semi-transparent dark overlay for sections */
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+            border-radius: 1.5rem; /* More rounded corners */
+            padding: 2.5rem 2rem; /* Responsive padding */
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08); /* Softer shadow */
+            text-align: center;
+            color: #FFFFFF; /* Text color for content sections */
+        }
+        .hero-section {
+            /* Now a semi-transparent black background, same as other sections */
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+            background-size: cover; /* Keep this for consistency, though not strictly needed for solid color */
+            background-position: center;
+            color: white; /* Text color for hero section */
+            padding: 6rem 1rem; /* Responsive padding */
+            border-radius: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
+            min-height: 400px; /* Ensure a minimum height */
+        }
+        .heading-font {
+            font-family: 'Playfair Display', serif;
+        }
+        .names {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 3.5rem; /* Larger names */
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            color: #FFFFFF; /* Names color for hero/pre-opening */
+            line-height: 1.1;
+            text-align: center; /* Memusatkan teks nama mempelai */
+        }
+        .and-text {
+            font-size: 2rem;
+            font-weight: 400;
+            color: #FFFFFF; /* And text color for hero/pre-opening */
+        }
+        .date-time {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #FFFFFF; /* Date/time color for hero/pre-opening */
+        }
+        .button {
+            display: inline-block;
+            background-color: #A0522D; /* Terra cotta */
+            color: white;
+            padding: 0.85rem 2rem;
+            border-radius: 0.75rem; /* More rounded */
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 10px rgba(160, 82, 45, 0.3);
+        }
+        .button:hover {
+            background-color: #8B4513; /* Darker Sienna */
+            transform: translateY(-2px);
+        }
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Slightly larger grid items */
+            gap: 1.5rem; /* More spacing */
+            margin-top: 1.5rem;
+        }
+        .gallery-item img {
+            width: 100%;
+            height: 250px; /* Taller images */
+            object-fit: cover;
+            border-radius: 1rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .gallery-item img:hover {
+            transform: scale(1.03);
+        }
+        .divider {
+            width: 80px;
+            height: 3px;
+            background-color: #A0522D;
+            margin: 1.5rem auto;
+            border-radius: 5px;
+        }
+        .music-controls {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            z-index: 1000;
+            transition: opacity 0.5s ease; /* For fading in/out */
+        }
+        .music-button {
+            background-color: #A0522D;
+            color: white;
+            border-radius: 9999px; /* Full rounded */
+            padding: 0.75rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+        }
+        .music-button:hover {
+            background-color: #8B4513;
+        }
+
+        /* Pre-opening screen styles */
+        .pre-opening-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Background image from user's GitHub raw link (going_merry) */
+            background-image: url('https://raw.githubusercontent.com/suriansyahdmw28-ops/Undangan/31b009a007ed178492d6fdbb2df1526af740a953/going_merry.jpg');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
+            z-index: 2000; /* On top of everything */
+            transition: opacity 1s ease-out, visibility 1s ease-out;
+            opacity: 1;
+            visibility: visible;
+        }
+        .pre-opening-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .pre-opening-screen .names {
+            font-size: 4rem; /* Larger names for opening */
+            margin-bottom: 1rem;
+        }
+        .pre-opening-screen .and-text {
+            font-size: 2.5rem;
+        }
+        .pre-opening-screen .button {
+            margin-top: 2rem;
+            font-size: 1.2rem;
+            padding: 1rem 2.5rem;
+        }
+
+        /* Specific text colors within sections to ensure white */
+        .section p, .section h2, .section strong, .section a {
+            color: #FFFFFF; /* Ensure all text inside sections is white */
+        }
+        .section a.button { /* Keep button text white */
+            color: white;
+        }
+        .section .names, .section .and-text, .section .date-time {
+            color: #FFFFFF; /* Ensure names/date-time in sections are white */
+        }
+
+        /* Styles for the bank account box to make text visible */
+        .section .grid .p-4 {
+            background-color: white !important; /* Make it pure white and override any other background */
+            color: black !important; /* Set text inside this div to black */
+        }
+        .section .grid .p-4 p,
+        .section .grid .p-4 .font-semibold,
+        .section .grid .p-4 .text-sm {
+            color: black !important; /* Explicitly ensure all text elements inside this div are black */
+        }
+
+        /* Countdown Timer Styles */
+        .countdown-timer {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap; /* Allow wrapping on small screens */
+        }
+        .countdown-item {
+            background-color: rgba(255, 255, 255, 0.1); /* Slightly transparent white for items */
+            border-radius: 0.75rem;
+            padding: 1rem;
+            min-width: 80px; /* Ensure minimum width */
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .countdown-item span {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 400;
+            margin-top: 0.25rem;
+        }
+        /* Comment section styles */
+        .comments-display {
+            max-height: 400px; /* Limit height for scrollable comments */
+            overflow-y: auto; /* Enable vertical scrolling */
+            padding-right: 10px; /* Space for scrollbar */
+            margin-bottom: 1rem;
+            /* Changed to match section background */
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 0.75rem;
+            padding: 1rem;
+        }
+        .comments-display::-webkit-scrollbar {
+            width: 8px;
+        }
+        .comments-display::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        .comments-display::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+        }
+        .comments-display::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+        .comment-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .comment-input-group input,
+        .comment-input-group textarea {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+        }
+        .comment-input-group input::placeholder,
+        .comment-input-group textarea::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        /* Style for individual comment items within comments-display */
+        .comments-display > div { /* Target the div that holds each comment */
+            background-color: transparent; /* Make individual comment background transparent */
+            border: 1px solid rgba(255, 255, 255, 0.2); /* Add a subtle border for separation */
+            margin-bottom: 0.75rem; /* Space between comments */
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+        .comments-display > div:last-child {
+            margin-bottom: 0; /* No margin after the last comment */
+        }
+
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0.75rem; /* Smaller padding on mobile */
+            }
+            .section {
+                padding: 1.5rem 1rem; /* Smaller padding on mobile */
+                margin-bottom: 1.5rem;
+            }
+            .hero-section {
+                padding: 3rem 0.5rem; /* Smaller padding on mobile */
+                min-height: 280px;
+            }
+            .names {
+                font-size: 2.5rem; /* Smaller font size */
+            }
+            .and-text {
+                font-size: 1.4rem; /* Smaller font size */
+            }
+            .date-time {
+                font-size: 1.1rem; /* Smaller font size */
+            }
+            .text-lg { /* Adjust general text size */
+                font-size: 1rem;
+            }
+            .text-xl {
+                font-size: 1.125rem;
+            }
+            .text-2xl {
+                font-size: 1.5rem;
+            }
+            .text-3xl {
+                font-size: 1.875rem;
+            }
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Smaller grid size */
+                gap: 1rem;
+            }
+            .gallery-item img {
+                height: 180px; /* Smaller gallery image height */
+            }
+            .music-controls {
+                bottom: 1rem;
+                right: 1rem;
+            }
+            .music-button {
+                width: 45px;
+                height: 45px;
+                padding: 0.6rem;
+            }
+            .pre-opening-screen .names {
+                font-size: 3rem;
+            }
+            .pre-opening-screen .and-text {
+                font-size: 2rem;
+            }
+            .pre-opening-screen .button {
+                font-size: 1.1rem;
+                padding: 0.8rem 2rem;
+            }
+            .countdown-item {
+                font-size: 1.2rem;
+                padding: 0.75rem;
+                min-width: 70px;
+            }
+            .countdown-item span {
+                font-size: 0.7rem;
+            }
+            .comments-display {
+                max-height: 300px; /* Adjust height for mobile */
+            }
+        }
+        @media (max-width: 480px) {
+            .names {
+                font-size: 2rem;
+            }
+            .and-text {
+                font-size: 1.2rem;
+            }
+            .date-time {
+                font-size: 0.9rem;
+            }
+            .hero-section {
+                padding: 2.5rem 0.5rem;
+                min-height: 250px;
+            }
+            .section {
+                padding: 1rem 0.75rem;
+                margin-bottom: 1rem;
+            }
+            .button {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.9rem;
+            }
+            .gallery-grid {
+                grid-template-columns: 1fr; /* Single column on very small screens */
+            }
+            .gallery-item img {
+                height: 200px; /* Reasonable height for single column */
+            }
+            .pre-opening-screen .names {
+                font-size: 2.5rem;
+            }
+            .pre-opening-screen .and-text {
+                font-size: 1.5rem;
+            }
+            .pre-opening-screen .button {
+                font-size: 1rem;
+                padding: 0.7rem 1.5rem;
+            }
+            .countdown-item {
+                font-size: 1rem;
+                padding: 0.6rem;
+                min-width: 60px;
+            }
+            .countdown-item span {
+                font-size: 0.6rem;
+            }
+            .comments-display {
+                max-height: 250px; /* Further adjust height for very small mobile */
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Pre-opening Screen -->
+    <div id="preOpeningScreen" class="pre-opening-screen">
+        <p class="text-2xl md:text-3xl font-light mb-4 heading-font">The Wedding Of</p>
+        <h1 class="names">
+            <span class="block">Sonia Agustina Oemar, S. Farm</span>
+            <span class="and-text">&</span>
+            <span class="block">Suriansyah, S. Kep., Ners</span>
+        </h1>
+        <p class="text-xl md:text-2xl font-semibold mt-4 heading-font">
+            Rabu, 24 September 2025
+        </p>
+        <button id="openInvitationButton" class="button">Buka Undangan</button>
+
+        <!-- Music Button on Pre-opening Screen -->
+        <div class="music-controls absolute bottom-4 right-4">
+            <button id="musicToggleButtonPre" class="music-button">
+                <svg id="playIconPre" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                    <path fill-rule="evenodd" d="M4.5 5.653c0-1.427 1.529-2.307 2.796-1.664l11.54 6.347c1.268.697 1.268 2.637 0 3.334l-11.54 6.347C6.029 20.307 4.5 19.427 4.5 18.0V5.653Z" clip-rule="evenodd" />
+                </svg>
+                <svg id="pauseIconPre" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 hidden">
+                    <path fill-rule="evenodd" d="M6.75 5.25a.75.75 0 0 1 .75-.75H9a.75.75 0 0 1 .75.75v13.5a.75.75 0 0 1-.75.75H7.5a.75.75 0 0 1-.75-.75V5.25ZM14.25 5.25a.75.75 0 0 1 .75-.75h1.5a.75.75 0 0 1 .75.75v13.5a.75.75 0 0 1-.75.75h-1.5a.75.75 0 0 1-.75-.75V5.25Z" clip-rule="evenodd" />
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Invitation Content -->
+    <div id="mainContent" class="hidden">
+        <div class="container">
+            <!-- Hero Section -->
+            <div class="hero-section rounded-xl">
+                <p class="text-xl md:text-2xl font-light mb-2 heading-font">The Wedding Of</p>
+                <h1 class="names text-white">
+                    <span class="block">Sonia Agustina Oemar, S. Farm</span>
+                    <span class="and-text text-white">&</span>
+                    <span class="block">Suriansyah, S. Kep., Ners</span>
+                </h1>
+                <p class="text-xl md:text-2xl font-semibold text-white mt-4 heading-font">
+                    Rabu, 24 September 2025
+                </p>
+            </div>
+
+            <!-- Countdown Section (Moved to top) -->
+            <div class="section">
+                <h2 class="text-3xl font-bold mb-4 heading-font">Menuju Hari Bahagia</h2>
+                <div class="countdown-timer">
+                    <div class="countdown-item">
+                        <span id="days">00</span>
+                        <span>Hari</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span id="hours">00</span>
+                        <span>Jam</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span id="minutes">00</span>
+                        <span>Menit</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span id="seconds">00</span>
+                        <span>Detik</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- To Guest Section -->
+            <div class="section">
+                <p class="text-lg md:text-xl mb-4 heading-font">Kepada Yth.</p>
+                <h2 class="text-2xl md:text-3xl font-bold mb-2 heading-font">
+                    <span id="guestNamePlaceholder">Bapak/Ibu/Saudara/i</span>
+                </h2>
+                <p class="text-md">Tanpa mengurangi rasa hormat, kami mengundang Anda untuk hadir di acara pernikahan kami.</p>
+            </div>
+
+            <!-- Opening Verse/Quote Section -->
+            <div class="section">
+                <h2 class="text-2xl md:text-3xl font-bold mb-4 heading-font">Bismillahirrahmanirrahim</h2>
+                <p class="text-lg italic">
+                    "Maha Suci Allah yang telah menciptakan semuanya berpasang-pasangan, baik dari apa yang ditumbuhkan oleh bumi dan dari diri mereka sendiri maupun dari apa yang tidak mereka ketahui."
+                </p>
+                <p class="text-md mt-2">— QS. Yasin : 36</p>
+            </div>
+
+            <!-- Event Details Section - Akad Nikah -->
+            <div class="section">
+                <h2 class="text-3xl font-bold mb-4 heading-font">Akad Nikah</h2>
+                <p class="date-time text-2xl font-semibold mb-2">Rabu, 24 September 2025</p>
+                <p class="text-xl mb-4">Pukul 08:00 WITA</p>
+                <p class="text-lg">
+                    <strong>Lokasi:</strong> Rumah Mempelai<br>
+                    Samping Masjid Jabal Rahmah Mandin, Pulau Laut Utara, Kab. Kotabaru, Kalimantan Selatan 72114
+                </p>
+                <a href="https://maps.app.goo.gl/Z5dU8usUaRLz9Xhv8" target="_blank" class="button mt-6">Lihat di Google Maps</a>
+            </div>
+
+            <!-- Event Details Section - Resepsi -->
+            <div class="section">
+                <h2 class="text-3xl font-bold mb-4 heading-font">Resepsi</h2>
+                <p class="date-time text-2xl font-semibold mb-2">Rabu, 24 September 2025</p>
+                <p class="text-xl mb-4">Pukul 10:00 WITA - Selesai</p>
+                <p class="text-lg">
+                    <strong>Lokasi:</strong> Rumah Mempelai<br>
+                    Samping Masjid Jabal Rahmah Mandin, Pulau Laut Utara, Kab. Kotabaru, Kalimantan Selatan 72114
+                </p>
+                <a href="https://maps.app.goo.gl/Z5dU8usUaRLz9Xhv8" target="_blank" class="button mt-6">Lihat di Google Maps</a>
+            </div>
+
+            <!-- Gallery Section -->
+            <div class="section">
+                <h2 class="text-3xl font-bold mb-4 heading-font">Galeri Momen</h2>
+                <div class="gallery-grid">
+                    <div class="gallery-item">
+                        <img src="https://raw.githubusercontent.com/suriansyahdmw28-ops/Undangan/31b009a007ed178492d6fdbb2df1526af740a953/peaceminusone-graphics-design-q6iqw9nxw7r8g82s.jpg" alt="Foto Pernikahan 1" onerror="this.onerror=null;this.src='https://placehold.co/400x300/E0BBE4/957DAD?text=Foto+1';">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://placehold.co/400x300/957DAD/E0BBE4?text=Foto+2" alt="Foto Pernikahan 2" onerror="this.onerror=null;this.src='https://placehold.co/400x300/957DAD/E0BBE4?text=Foto+2';">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://placehold.co/400x300/D291BC/6A0572?text=Foto+3" alt="Foto Pernikahan 3" onerror="this.onerror=null;this.src='https://placehold.co/400x300/D291BC/6A0572?text=Foto+3';">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://placehold.co/400x300/FFC72C/000000?text=Foto+4" alt="Foto Pernikahan 4" onerror="this.onerror=null;this.src='https://placehold.co/400x300/FFC72C/000000?text=Foto+4';">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gift Information Section (Optional) -->
+            <div class="section">
+                <h2 class="text-3xl font-bold mb-4 heading-font">Hadiah & Doa Restu</h2>
+                <p class="text-lg mb-4">
+                    Kehadiran dan doa restu Anda adalah hadiah terindah bagi kami. Namun, jika Anda ingin memberikan tanda kasih, Anda dapat menyalurkannya melalui:
+                </p>
+                <div class="grid grid-cols-1 gap-4 text-left">
+                    <div class="p-4 bg-gray-50 rounded-lg">
+                        <p class="font-semibold">Bank Mandiri</p>
+                        <p class="text-sm">No. Rekening: 310021268571</p>
+                        <p class="text-sm">Atas Nama: Sonia Agustina Oemar</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comment/Ucapan Selamat Section (Real-time with Firestore) -->
+            <div class="section">
+                <h2 class="text-3xl font-bold mb-4 heading-font">Kirim Ucapan & Doa</h2>
+                <p class="text-lg mb-4">
+                    Silakan tinggalkan pesan, doa, atau ucapan selamat Anda untuk kami.
+                </p>
+                <div class="comment-input-group">
+                    <input type="text" id="commentGuestName" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-300" placeholder="Nama Anda (Opsional)">
+                    <textarea id="commentMessage" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-300" rows="5" placeholder="Tulis ucapan Anda di sini..."></textarea>
+                    <button id="sendCommentButton" class="button">Kirim Ucapan</button>
+                </div>
+                <p class="text-sm mt-2 mb-4">
+                    *Ucapan Anda akan terlihat secara real-time di sini.
+                </p>
+                <div id="commentsList" class="comments-display">
+                    <!-- Comments will be loaded here by JavaScript -->
+                    <p class="text-center text-gray-400">Memuat ucapan...</p>
+                </div>
+                <p id="currentUserId" class="text-xs text-gray-400 mt-2">User ID: Memuat...</p>
+            </div>
+
+            <!-- Closing Section -->
+            <div class="section">
+                <h2 class="text-3xl font-bold mb-4 heading-font">Terima Kasih</h2>
+                <p class="text-lg">
+                    Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa restu.
+                </p>
+                <p class="text-lg mt-4">
+                    Atas kehadiran dan doa restunya, kami mengucapkan terima kasih.
+                </p>
+                <div class="divider"></div>
+                <p class="names text-3xl mt-6">
+                    Sonia Agustina Oemar & Suriansyah
+                </p>
+                <p class="text-md mt-2">
+                    Keluarga Besar
+                </p>
+            </div>
+
+            <!-- Footer -->
+            <footer class="text-center text-gray-500 text-sm py-4">
+                &copy; 2025 Undangan Pernikahan. Dibuat dengan Cinta.
+            </footer>
+        </div>
+    </div>
+
+    <!-- Audio for Background Music -->
+    <audio id="backgroundMusic" loop>
+        <source src="https://github.com/suriansyahdmw28-ops/Undangan/raw/refs/heads/main/bigbangstill.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        // Global variables provided by Canvas environment
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null; // Corrected typo here
+
+        let app;
+        let db;
+        let auth;
+        let userId; // Will store the current user's ID
+
+        // Initialize Firebase and authenticate
+        async function initializeFirebaseAndAuth() {
+            try {
+                // Check if firebaseConfig is empty or missing projectId (common issue in Canvas when not provided)
+                if (Object.keys(firebaseConfig).length === 0 || !firebaseConfig.projectId) {
+                    console.warn("Firebase config not found or incomplete. Please provide __firebase_config.");
+                    // FALLBACK FOR LOCAL TESTING: REPLACE THESE WITH YOUR ACTUAL FIREBASE CONFIG
+                    // Get this from Firebase Console -> Project settings -> Your apps -> Web app -> Config
+                    app = initializeApp({
+                        apiKey: "AIzaSyBck1L_R9RrXocDKo58RvwSbm7IPQQkbOk", // <<< GANTI INI DENGAN API KEY ASLI ANDA
+                        authDomain: "undangan-sonia-suriansyah.firebaseapp.com", // <<< GANTI INI DENGAN AUTH DOMAIN ASLI ANDA
+                        projectId: "undangan-sonia-suriansyah", // <<< GANTI INI DENGAN PROJECT ID ASLI ANDA
+                        storageBucket: "undangan-sonia-suriansyah.firebasestorage.app", // <<< GANTI INI DENGAN STORAGE BUCKET ASLI ANDA
+                        messagingSenderId: "405367450209", // <<< GANTI INI DENGAN MESSAGING SENDER ID ASLI ANDA
+                        appId: "1:405367450209:web:0c2c8632dcdfd5e387d820" // <<< GANTI INI DENGAN APP ID ASLI ANDA
+                    });
+                } else {
+                    // Use the config provided by the Canvas environment
+                    app = initializeApp(firebaseConfig);
+                }
+
+                db = getFirestore(app);
+                auth = getAuth(app);
+
+                // Sign in with custom token if available, otherwise anonymously
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    await signInAnonymously(auth);
+                }
+
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        userId = user.uid;
+                        console.log("User authenticated:", userId);
+                        document.getElementById('currentUserId').textContent = `User ID: ${userId}`;
+                        setupRealtimeComments(); // Start listening for comments after auth
+                    } else {
+                        console.log("No user is signed in.");
+                        userId = crypto.randomUUID(); // Generate a random ID for unauthenticated users
+                        document.getElementById('currentUserId').textContent = `User ID (Anon): ${userId}`;
+                        setupRealtimeComments(); // Still try to load comments
+                    }
+                });
+
+            } catch (error) {
+                console.error("Error initializing Firebase or authenticating:", error);
+                // Fallback for userId if auth fails completely
+                userId = crypto.randomUUID();
+                document.getElementById('currentUserId').textContent = `User ID (Error/Anon): ${userId}`;
+                setupRealtimeComments(); // Still try to load comments
+            }
+        }
+
+        // Setup real-time comments
+        function setupRealtimeComments() {
+            // Path to your public comments collection
+            const commentsCollectionRef = collection(db, `artifacts/${appId}/public/data/comments`);
+            const commentsList = document.getElementById('commentsList');
+
+            // Listen for real-time updates
+            // IMPORTANT: orderBy is restricted in Canvas environment. Fetch all and sort client-side.
+            onSnapshot(commentsCollectionRef, (snapshot) => {
+                const comments = [];
+                snapshot.forEach(doc => {
+                    comments.push({ id: doc.id, ...doc.data() });
+                });
+
+                // Sort comments by timestamp client-side
+                comments.sort((a, b) => {
+                    // Robust check for timestamp and toDate() method
+                    const timeA = a.timestamp && typeof a.timestamp.toDate === 'function' ? a.timestamp.toDate().getTime() : 0;
+                    const timeB = b.timestamp && typeof b.timestamp.toDate === 'function' ? b.timestamp.toDate().getTime() : 0;
+                    return timeA - timeB;
+                });
+
+                commentsList.innerHTML = ''; // Clear existing comments
+                if (comments.length === 0) {
+                    commentsList.innerHTML = '<p class="text-center text-gray-400">Belum ada ucapan. Jadilah yang pertama!</p>';
+                } else {
+                    comments.forEach(comment => {
+                        const commentElement = document.createElement('div');
+                        // Use bg-transparent so it takes the parent's background (comments-display)
+                        // Added border for separation and subtle shadow
+                        commentElement.className = 'bg-transparent p-4 rounded-lg mb-3 text-left text-white shadow-sm border border-gray-700';
+                        
+                        // Improved date formatting and validation
+                        let formattedDate = 'Tanggal tidak diketahui';
+                        if (comment.timestamp && typeof comment.timestamp.toDate === 'function') {
+                            formattedDate = new Date(comment.timestamp.toDate()).toLocaleString('id-ID', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            });
+                        }
+                        
+                        const senderName = comment.guestName || 'Tamu Anonim';
+                        commentElement.innerHTML = `
+                            <p class="font-semibold text-white">${senderName}</p>
+                            <p class="text-sm text-gray-300 mb-2">${formattedDate}</p>
+                            <p class="text-base whitespace-pre-wrap">${comment.message}</p>
+                        `;
+                        commentsList.appendChild(commentElement);
+                    });
+                    commentsList.scrollTop = commentsList.scrollHeight; // Scroll to bottom on new comment
+                }
+            }, (error) => {
+                console.error("Error listening to comments:", error);
+                commentsList.innerHTML = '<p class="text-red-300 text-center">Gagal memuat ucapan. Silakan periksa koneksi atau konfigurasi Firebase.</p>';
+            });
+
+            // Handle comment submission
+            const sendCommentButton = document.getElementById('sendCommentButton');
+            const commentMessageInput = document.getElementById('commentMessage');
+            const guestNameInput = document.getElementById('commentGuestName'); // New input for guest name
+
+            sendCommentButton.addEventListener('click', async () => {
+                const message = commentMessageInput.value.trim();
+                const guestName = guestNameInput.value.trim(); // Get name from input field
+
+                if (message && guestName) {
+                    try {
+                        await addDoc(commentsCollectionRef, {
+                            guestName: guestName,
+                            message: message,
+                            timestamp: serverTimestamp(), // Ensure serverTimestamp() is used
+                            userId: userId // Store the user ID
+                        });
+                        commentMessageInput.value = ''; // Clear message input
+                        
+                        const successMessageDiv = document.createElement('div');
+                        successMessageDiv.className = 'bg-green-500 text-white p-2 rounded-lg mt-2 mb-2';
+                        successMessageDiv.textContent = 'Ucapan Anda berhasil dikirim!';
+                        sendCommentButton.parentNode.insertBefore(successMessageDiv, sendCommentButton.nextSibling);
+                        setTimeout(() => successMessageDiv.remove(), 3000); // Remove after 3 seconds
+                    } catch (e) {
+                        console.error("Error adding document: ", e);
+                        const errorMessageDiv = document.createElement('div');
+                        errorMessageDiv.className = 'bg-red-500 text-white p-2 rounded-lg mt-2 mb-2';
+                        errorMessageDiv.textContent = 'Gagal mengirim ucapan. Silakan coba lagi.';
+                        sendCommentButton.parentNode.insertBefore(errorMessageDiv, sendCommentButton.nextSibling);
+                        setTimeout(() => errorMessageDiv.remove(), 5000); // Remove after 5 seconds
+                    }
+                } else {
+                    const warningMessageDiv = document.createElement('div');
+                    warningMessageDiv.className = 'bg-yellow-500 text-white p-2 rounded-lg mt-2 mb-2';
+                    warningMessageDiv.textContent = 'Mohon isi Nama dan Ucapan Anda.';
+                    sendCommentButton.parentNode.insertBefore(warningMessageDiv, sendCommentButton.nextSibling);
+                    setTimeout(() => warningMessageDiv.remove(), 3000); // Remove after 3 seconds
+                }
+            });
+        }
+
+        // Other existing JavaScript logic (outside the module for clarity, but still executed)
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            let guestName = urlParams.get('to');
+
+            if (guestName) {
+                guestName = decodeURIComponent(guestName.replace(/\+/g, ' '));
+                document.getElementById('guestNamePlaceholder').textContent = guestName;
+                document.getElementById('commentGuestName').value = guestName; // Pre-fill comment name
+            } else {
+                document.getElementById('guestNamePlaceholder').textContent = 'Bapak/Ibu/Saudara/i';
+                document.getElementById('commentGuestName').value = ''; // Ensure empty if no name in URL
+            }
+
+            const preOpeningScreen = document.getElementById('preOpeningScreen');
+            const mainContent = document.getElementById('mainContent');
+            const openInvitationButton = document.getElementById('openInvitationButton');
+            const backgroundMusic = document.getElementById('backgroundMusic');
+            const musicToggleButtonPre = document.getElementById('musicToggleButtonPre');
+            const playIconPre = document.getElementById('playIconPre');
+            const pauseIconPre = document.getElementById('pauseIconPre');
+
+            // Initial state for music button on pre-opening screen
+            playIconPre.classList.remove('hidden');
+            pauseIconPre.classList.add('hidden');
+
+            // Handle music toggle on pre-opening screen
+            musicToggleButtonPre.addEventListener('click', function(event) {
+                event.stopPropagation(); // Prevent click from bubbling to openInvitationButton
+                if (backgroundMusic.paused) {
+                    backgroundMusic.play();
+                    playIconPre.classList.add('hidden');
+                    pauseIconPre.classList.remove('hidden');
+                } else {
+                    backgroundMusic.pause();
+                    playIconPre.classList.remove('hidden');
+                    pauseIconPre.classList.add('hidden');
+                }
+            });
+
+            // Open invitation and start music on button click
+            openInvitationButton.addEventListener('click', function() {
+                preOpeningScreen.classList.add('hidden'); // Hide pre-opening screen
+                mainContent.classList.remove('hidden'); // Show main content
+                backgroundMusic.play().catch(error => {
+                    console.log('Music play failed after click:', error);
+                });
+
+                // Scroll to top of the main content after opening
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+            // Countdown Timer Logic
+            // Set the date we're counting down to (Rabu, 24 September 2025, 08:00 WITA)
+            // Note: Months are 0-indexed (September is 8)
+            const countDownDate = new Date("Sep 24, 2025 08:00:00 GMT+0800").getTime(); // WITA is GMT+8
+
+            const x = setInterval(function() {
+                const now = new Date().getTime();
+                const distance = countDownDate - now;
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                // Display the result in the elements
+                document.getElementById("days").textContent = String(days).padStart(2, '0');
+                document.getElementById("hours").textContent = String(hours).padStart(2, '0');
+                document.getElementById("minutes").textContent = String(minutes).padStart(2, '0');
+                document.getElementById("seconds").textContent = String(seconds).padStart(2, '0');
+
+                // If the countdown is over, write some text
+                if (distance < 0) {
+                    clearInterval(x);
+                    document.getElementById("days").textContent = "00";
+                    document.getElementById("hours").textContent = "00";
+                    document.getElementById("minutes").textContent = "00";
+                    document.getElementById("seconds").textContent = "00";
+                    document.querySelector('.countdown-timer').innerHTML = '<p class="text-xl">Acara telah berlangsung!</p>';
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
