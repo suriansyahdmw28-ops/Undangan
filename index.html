@@ -600,11 +600,10 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js"; // Added Analytics import
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js"; 
 
-        // Global variables provided by Canvas environment
+        // Global variables provided by Canvas environment (if any)
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfigFromCanvas = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
         const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null; 
 
         let app;
@@ -613,103 +612,85 @@
         let userId; // Will store the current user's ID
         let analytics; // Declare analytics variable
 
+        // Firebase Configuration (YOURS) - Ini adalah konfigurasi yang Anda berikan
+        const YOUR_FIREBASE_CONFIG = {
+            apiKey: "AIzaSyBck1L_R9RrXocDKo58RvwSbm7IPQQkbOk",
+            authDomain: "undangan-sonia-suriansyah.firebaseapp.com",
+            projectId: "undangan-sonia-suriansyah",
+            storageBucket: "undangan-sonia-suriansyah.firebasestorage.app",
+            messagingSenderId: "405367450209",
+            appId: "1:405367450209:web:0c2c8632dcdfd5e387d820",
+            measurementId: "G-G64JCW3QX9"
+        };
+
         // Initialize Firebase and authenticate
         async function initializeFirebaseAndAuth() {
-            console.log("Initializing Firebase...");
             try {
-                // Use user's provided Firebase config directly if Canvas config is not present/complete
-                if (Object.keys(firebaseConfigFromCanvas).length === 0 || !firebaseConfigFromCanvas.projectId) {
-                    console.warn("Canvas-provided Firebase config not found or incomplete. Using hardcoded config.");
-                    // YOUR ACTUAL FIREBASE CONFIG GOES HERE
-                    // This is the config you provided:
-                    app = initializeApp({
-                        apiKey: "AIzaSyBck1L_R9RrXocDKo58RvwSbm7IPQQkbOk",
-                        authDomain: "undangan-sonia-suriansyah.firebaseapp.com",
-                        projectId: "undangan-sonia-suriansyah",
-                        storageBucket: "undangan-sonia-suriansyah.firebasestorage.app",
-                        messagingSenderId: "405367450209",
-                        appId: "1:405367450209:web:0c2c8632dcdfd5e387d820",
-                        measurementId: "G-G64JCW3QX9" // Added measurementId
-                    });
-                    analytics = getAnalytics(app); // Initialize Analytics here
-                    console.log("Using hardcoded Firebase config from user. Analytics initialized.");
-                } else {
-                    // Use the config provided by the Canvas environment
-                    app = initializeApp(firebaseConfigFromCanvas);
-                    analytics = getAnalytics(app); // Initialize Analytics here
-                    console.log("Using Canvas-provided Firebase config. Analytics initialized.");
-                }
-
+                // Selalu gunakan konfigurasi Firebase yang Anda sediakan
+                app = initializeApp(YOUR_FIREBASE_CONFIG);
+                analytics = getAnalytics(app); // Inisialisasi Analytics
+                
                 db = getFirestore(app);
                 auth = getAuth(app);
-                console.log("Firebase app, db, and auth initialized.");
-
+                
                 // Sign in with custom token if available, otherwise anonymously
                 if (initialAuthToken) {
-                    console.log("Attempting sign-in with custom token...");
                     await signInWithCustomToken(auth, initialAuthToken);
                 } else {
-                    console.log("Attempting anonymous sign-in...");
                     await signInAnonymously(auth);
                 }
 
                 onAuthStateChanged(auth, (user) => {
                     if (user) {
                         userId = user.uid;
-                        console.log("User authenticated. User ID:", userId);
                         document.getElementById('currentUserId').textContent = `User ID: ${userId}`;
-                        setupRealtimeComments(); // Start listening for comments after auth
+                        setupRealtimeComments(); // Mulai mendengarkan komentar setelah autentikasi
                     } else {
-                        console.log("No user is signed in. Generating anonymous ID.");
-                        userId = crypto.randomUUID(); // Generate a random ID for unauthenticated users
+                        userId = crypto.randomUUID(); // Buat ID acak untuk pengguna yang tidak terautentikasi
                         document.getElementById('currentUserId').textContent = `User ID (Anon): ${userId}`;
-                        setupRealtimeComments(); // Still try to load comments
+                        setupRealtimeComments(); // Tetap coba memuat komentar
                     }
                 });
 
             } catch (error) {
-                console.error("ERROR: Failed to initialize Firebase or authenticate:", error);
-                userId = crypto.randomUUID();
-                document.getElementById('currentUserId').textContent = `User ID (Error/Anon): ${userId}`;
-                setupRealtimeComments(); // Still try to load comments, but expect issues
+                document.getElementById('commentsList').innerHTML = '<p class="text-red-300 text-center">Gagal memuat ucapan. Silakan periksa koneksi atau konfigurasi Firebase.</p>';
+                document.getElementById('currentUserId').textContent = `User ID (Error): Gagal inisialisasi`;
             }
         }
 
         // Setup real-time comments
         function setupRealtimeComments() {
-            console.log("Setting up real-time comments listener...");
             // Path to your public comments collection
             const commentsCollectionRef = collection(db, `artifacts/${appId}/public/data/comments`);
             const commentsList = document.getElementById('commentsList');
 
             // Listen for real-time updates
-            // IMPORTANT: orderBy is restricted in Canvas environment. Fetch all and sort client-side.
+            // PENTING: orderBy dibatasi di lingkungan Canvas. Ambil semua dan urutkan di sisi klien.
             onSnapshot(commentsCollectionRef, (snapshot) => {
-                console.log("Received Firestore snapshot. Number of documents:", snapshot.size);
                 const comments = [];
                 snapshot.forEach(doc => {
                     comments.push({ id: doc.id, ...doc.data() });
                 });
 
-                // Sort comments by timestamp client-side
+                // Urutkan komentar berdasarkan timestamp di sisi klien
                 comments.sort((a, b) => {
-                    // Robust check for timestamp and toDate() method
+                    // Pemeriksaan yang kuat untuk timestamp dan metode toDate()
                     const timeA = a.timestamp && typeof a.timestamp.toDate === 'function' ? a.timestamp.toDate().getTime() : 0;
                     const timeB = b.timestamp && typeof b.timestamp.toDate === 'function' ? b.timestamp.toDate().getTime() : 0;
                     return timeA - timeB;
                 });
 
-                commentsList.innerHTML = ''; // Clear existing comments
+                commentsList.innerHTML = ''; // Hapus komentar yang ada
                 if (comments.length === 0) {
                     commentsList.innerHTML = '<p class="text-center text-gray-400">Belum ada ucapan. Jadilah yang pertama!</p>';
                 } else {
                     comments.forEach(comment => {
                         const commentElement = document.createElement('div');
-                        // Use bg-transparent so it takes the parent's background (comments-display)
-                        // Added border for separation and subtle shadow
+                        // Gunakan bg-transparent agar mengambil background parent (comments-display)
+                        // Ditambahkan border untuk pemisah dan bayangan tipis
                         commentElement.className = 'bg-transparent p-4 rounded-lg mb-3 text-left text-white shadow-sm border border-gray-700';
                         
-                        // Improved date formatting and validation
+                        // Pemformatan dan validasi tanggal yang ditingkatkan
                         let formattedDate = 'Tanggal tidak diketahui';
                         if (comment.timestamp && typeof comment.timestamp.toDate === 'function') {
                             formattedDate = new Date(comment.timestamp.toDate()).toLocaleString('id-ID', {
@@ -729,69 +710,68 @@
                         `;
                         commentsList.appendChild(commentElement);
                     });
-                    commentsList.scrollTop = commentsList.scrollHeight; // Scroll to bottom on new comment
+                    commentsList.scrollTop = commentsList.scrollHeight; // Gulir ke bawah pada komentar baru
                 }
             }, (error) => {
-                console.error("ERROR: Firestore onSnapshot failed:", error);
-                commentsList.innerHTML = '<p class="text-red-300 text-center">Gagal memuat ucapan. Silakan periksa koneksi atau konfigurasi Firebase.</p>';
+                document.getElementById('commentsList').innerHTML = '<p class="text-red-300 text-center">Gagal memuat ucapan. Silakan periksa koneksi atau konfigurasi Firebase.</p>';
             });
 
             // Handle comment submission
             const sendCommentButton = document.getElementById('sendCommentButton');
             const commentMessageInput = document.getElementById('commentMessage');
-            const guestNameInput = document.getElementById('commentGuestName'); // New input for guest name
+            const guestNameInput = document.getElementById('commentGuestName'); // Input baru untuk nama tamu
 
             sendCommentButton.addEventListener('click', async () => {
                 const message = commentMessageInput.value.trim();
-                const guestName = guestNameInput.value.trim(); // Get name from input field
+                const guestName = guestNameInput.value.trim(); // Ambil nama dari field input
 
                 if (message && guestName) {
-                    console.log("Attempting to send comment...");
                     try {
                         await addDoc(commentsCollectionRef, {
                             guestName: guestName,
                             message: message,
-                            timestamp: serverTimestamp(), // Ensure serverTimestamp() is used
-                            userId: userId // Store the user ID
+                            timestamp: serverTimestamp(), // Pastikan serverTimestamp() digunakan
+                            userId: userId // Simpan ID pengguna
                         });
-                        commentMessageInput.value = ''; // Clear message input
+                        commentMessageInput.value = ''; // Hapus input pesan
                         
                         const successMessageDiv = document.createElement('div');
                         successMessageDiv.className = 'bg-green-500 text-white p-2 rounded-lg mt-2 mb-2';
                         successMessageDiv.textContent = 'Ucapan Anda berhasil dikirim!';
                         sendCommentButton.parentNode.insertBefore(successMessageDiv, sendCommentButton.nextSibling);
-                        setTimeout(() => successMessageDiv.remove(), 3000); // Remove after 3 seconds
-                        console.log("Comment sent successfully!");
+                        setTimeout(() => successMessageDiv.remove(), 3000); // Hapus setelah 3 detik
                     } catch (e) {
-                        console.error("ERROR: Failed to add document to Firestore:", e);
                         const errorMessageDiv = document.createElement('div');
                         errorMessageDiv.className = 'bg-red-500 text-white p-2 rounded-lg mt-2 mb-2';
                         errorMessageDiv.textContent = 'Gagal mengirim ucapan. Silakan coba lagi.';
                         sendCommentButton.parentNode.insertBefore(errorMessageDiv, sendCommentButton.nextSibling);
-                        setTimeout(() => errorMessageDiv.remove(), 5000); // Remove after 5 seconds
+                        setTimeout(() => errorMessageDiv.remove(), 5000); // Hapus setelah 5 detik
                     }
                 } else {
                     const warningMessageDiv = document.createElement('div');
                     warningMessageDiv.className = 'bg-yellow-500 text-white p-2 rounded-lg mt-2 mb-2';
                     warningMessageDiv.textContent = 'Mohon isi Nama dan Ucapan Anda.';
                     sendCommentButton.parentNode.insertBefore(warningMessageDiv, sendCommentButton.nextSibling);
-                    setTimeout(() => warningMessageDiv.remove(), 3000); // Remove after 3 seconds
+                    setTimeout(() => warningMessageDiv.remove(), 3000); // Hapus setelah 3 detik
                 }
             });
         }
 
-        // Other existing JavaScript logic (outside the module for clarity, but still executed)
+        // Logika JavaScript lainnya yang sudah ada
         document.addEventListener('DOMContentLoaded', function() {
+            // Panggil inisialisasi Firebase
+            initializeFirebaseAndAuth();
+
             const urlParams = new URLSearchParams(window.location.search);
             let guestName = urlParams.get('to');
 
             if (guestName) {
                 guestName = decodeURIComponent(guestName.replace(/\+/g, ' '));
                 document.getElementById('guestNamePlaceholder').textContent = guestName;
-                document.getElementById('commentGuestName').value = guestName; // Pre-fill comment name
+                document.getElementById('commentGuestName').value = guestName; // Isi otomatis nama komentar
             } else {
                 document.getElementById('guestNamePlaceholder').textContent = 'Bapak/Ibu/Saudara/i';
-                document.getElementById('commentGuestName').value = ''; // Ensure empty if no name in URL
+                document.getElementById('commentGuestName').value = ''; // Pastikan kosong jika tidak ada nama di URL
             }
 
             const preOpeningScreen = document.getElementById('preOpeningScreen');
@@ -802,13 +782,13 @@
             const playIconPre = document.getElementById('playIconPre');
             const pauseIconPre = document.getElementById('pauseIconPre');
 
-            // Initial state for music button on pre-opening screen
+            // Status awal untuk tombol musik di layar pembuka
             playIconPre.classList.remove('hidden');
             pauseIconPre.classList.add('hidden');
 
-            // Handle music toggle on pre-opening screen
+            // Tangani toggle musik di layar pembuka
             musicToggleButtonPre.addEventListener('click', function(event) {
-                event.stopPropagation(); // Prevent click from bubbling to openInvitationButton
+                event.stopPropagation(); // Cegah klik agar tidak menyebar ke openInvitationButton
                 if (backgroundMusic.paused) {
                     backgroundMusic.play();
                     playIconPre.classList.add('hidden');
@@ -820,22 +800,22 @@
                 }
             });
 
-            // Open invitation and start music on button click
+            // Buka undangan dan mulai musik saat tombol diklik
             openInvitationButton.addEventListener('click', function() {
-                preOpeningScreen.classList.add('hidden'); // Hide pre-opening screen
-                mainContent.classList.remove('hidden'); // Show main content
+                preOpeningScreen.classList.add('hidden'); // Sembunyikan layar pembuka
+                mainContent.classList.remove('hidden'); // Tampilkan konten utama
                 backgroundMusic.play().catch(error => {
-                    console.log('Music play failed after click:', error);
+                    // Tidak ada console.log di sini, karena Anda tidak ingin melihatnya
                 });
 
-                // Scroll to top of the main content after opening
+                // Gulir ke atas konten utama setelah dibuka
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
 
-            // Countdown Timer Logic
-            // Set the date we're counting down to (Rabu, 24 September 2025, 08:00 WITA)
-            // Note: Months are 0-indexed (September is 8)
-            const countDownDate = new Date("Sep 24, 2025 08:00:00 GMT+0800").getTime(); // WITA is GMT+8
+            // Logika Countdown Timer
+            // Atur tanggal hitung mundur (Rabu, 24 September 2025, 08:00 WITA)
+            // Catatan: Bulan diindeks 0 (September adalah 8)
+            const countDownDate = new Date("Sep 24, 2025 08:00:00 GMT+0800").getTime(); // WITA adalah GMT+8
 
             const x = setInterval(function() {
                 const now = new Date().getTime();
@@ -846,13 +826,13 @@
                 const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                 const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-                // Display the result in the elements
+                // Tampilkan hasilnya di elemen
                 document.getElementById("days").textContent = String(days).padStart(2, '0');
                 document.getElementById("hours").textContent = String(hours).padStart(2, '0');
                 document.getElementById("minutes").textContent = String(minutes).padStart(2, '0');
                 document.getElementById("seconds").textContent = String(seconds).padStart(2, '0');
 
-                // If the countdown is over, write some text
+                // Jika hitung mundur selesai, tulis teks
                 if (distance < 0) {
                     clearInterval(x);
                     document.getElementById("days").textContent = "00";
